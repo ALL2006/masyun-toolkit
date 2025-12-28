@@ -11,16 +11,18 @@ log.info('App starting...');
 // 配置国内镜像源加速下载
 // 使用多个可靠的镜像源以提高可用性和速度
 // 测试可用时间: 2025-12-28
-const MIRROR_BASE_URL = 'https://gh-proxy.com/https://github.com/ALL2006/masyun-toolkit/releases/download';
+
+// GitHub 上的 latest.yml 在具体版本路径下，需要使用完整 URL
+// 格式：https://gh-proxy.com/https://github.com/ALL2006/masyun-toolkit/releases/download/v0.3.0/latest.yml
+const MIRROR_LATEST_YML_URL = 'https://gh-proxy.com/https://github.com/ALL2006/masyun-toolkit/releases/download/v0.3.0/latest.yml';
 
 // 配置镜像源
 if (process.platform === 'win32') {
   app.setAppUserModelId('com.finance.tracker');
 
-  // 强制使用 generic provider + 镜像地址
-  // 这会覆盖 package.json 中的 GitHub provider
-  autoUpdater.setFeedURL(MIRROR_BASE_URL);
-  log.info('Update feed URL set to mirror:', MIRROR_BASE_URL);
+  // 设置为指向包含版本号的完整 latest.yml URL
+  autoUpdater.setFeedURL(MIRROR_LATEST_YML_URL);
+  log.info('Update feed URL set to mirror:', MIRROR_LATEST_YML_URL);
 }
 
 let mainWindow;
