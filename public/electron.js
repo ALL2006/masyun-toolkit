@@ -23,12 +23,6 @@ if (process.platform === 'win32') {
   log.info('Update feed URL set to mirror:', MIRROR_BASE_URL);
 }
 
-// 增加下载超时时间
-// 默认超时时间可能不够，增加容错
-autoUpdater.setRequestHeaders([
-  { 'Cache-Control': 'no-cache' }
-]);
-
 let mainWindow;
 
 function createWindow() {
