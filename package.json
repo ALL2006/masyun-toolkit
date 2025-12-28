@@ -1,8 +1,15 @@
 {
   "name": "personal-finance-tracker",
-  "version": "0.1.0",
+  "version": "0.2.0",
+  "description": "大学生记账本 - 离线桌面财务管理工具",
+  "author": "Your Name <your.email@example.com>",
   "private": true,
+  "main": "public/electron.js",
+  "homepage": "./",
   "dependencies": {
+    "@capacitor/android": "^7.4.4",
+    "@capacitor/cli": "^7.4.4",
+    "@capacitor/core": "^7.4.4",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
@@ -11,17 +18,66 @@
     "@types/node": "^16.18.126",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
+    "antd": "^6.0.1",
+    "chart.js": "^4.5.1",
+    "dexie": "^4.2.1",
+    "electron-log": "^5.4.3",
+    "electron-updater": "^6.6.2",
     "react": "^19.2.1",
+    "react-chartjs-2": "^5.3.1",
     "react-dom": "^19.2.1",
+    "react-router-dom": "^7.10.1",
     "react-scripts": "5.0.1",
     "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "xlsx": "^0.18.5"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "electron": "electron .",
+    "electron-dev": "concurrently \"npm start\" \"wait-on http://localhost:3000 && electron .\"",
+    "build-electron": "npm run build && electron-builder",
+    "build-electron-win": "npm run build && electron-builder --win",
+    "build-electron-win-unsigned": "npm run build && set CSC_LINK_SKIP=1 && electron-builder --win",
+    "build-electron-mac": "npm run build && electron-builder --mac",
+    "dist": "npm run build && electron-builder --publish=never",
+    "publish": "npm run build && electron-builder --publish=always"
+  },
+  "build": {
+    "appId": "com.finance.tracker",
+    "productName": "大学生记账本",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "build/**/*",
+      "node_modules/**/*",
+      "public/electron.js"
+    ],
+    "publish": {
+      "provider": "github",
+      "owner": "ALL2006",
+      "repo": "masyun-toolkit"
+    },
+    "win": {
+      "target": ["nsis"],
+      "artifactName": "finance-tracker-setup-${version}.${ext}",
+      "signAndEditExecutable": false
+    },
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.finance"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "allowElevation": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
   },
   "eslintConfig": {
     "extends": [
@@ -40,5 +96,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "electron": "^33.3.1",
+    "electron-builder": "^25.1.8",
+    "wait-on": "^9.0.3"
   }
 }

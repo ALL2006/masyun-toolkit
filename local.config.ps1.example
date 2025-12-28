@@ -1,0 +1,11 @@
+# 本地配置文件示例
+# 复制此文件为 local.config.ps1 并填入你的实际配置
+# 注意：local.config.ps1 已在 .gitignore 中，不会被提交到仓库
+
+# GitHub Token - 用于发布 Release
+# 获取方式：GitHub Settings → Developer settings → Personal access tokens → Tokens (classic)
+$githubToken = "你的GitHubToken"
+
+# GitHub 仓库信息
+$repoOwner = "你的GitHub用户名"
+$repoName = "仓库名称"

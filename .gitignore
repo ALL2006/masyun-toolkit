@@ -10,6 +10,7 @@
 
 # production
 /build
+/dist
 
 # misc
 .DS_Store
@@ -17,6 +18,10 @@
 .env.development.local
 .env.test.local
 .env.production.local
+
+# 本地配置文件（包含敏感信息）
+local.config.ps1
+
 
 npm-debug.log*
 yarn-debug.log*
