@@ -12,17 +12,12 @@ log.info('App starting...');
 // 使用多个可靠的镜像源以提高可用性和速度
 // 测试可用时间: 2025-12-28
 
-// GitHub 上的 latest.yml 在具体版本路径下，需要使用完整 URL
-// 格式：https://gh-proxy.com/https://github.com/ALL2006/masyun-toolkit/releases/download/v0.3.0/latest.yml
-const MIRROR_LATEST_YML_URL = 'https://gh-proxy.com/https://github.com/ALL2006/masyun-toolkit/releases/download/v0.3.0/latest.yml';
+// 不使用 setFeedURL 覆盖，让 electron-updater 使用 GitHub provider
+// 镜像加速通过 latest.yml 中的 files[0].url 配置实现
 
-// 配置镜像源
 if (process.platform === 'win32') {
   app.setAppUserModelId('com.finance.tracker');
-
-  // 设置为指向包含版本号的完整 latest.yml URL
-  autoUpdater.setFeedURL(MIRROR_LATEST_YML_URL);
-  log.info('Update feed URL set to mirror:', MIRROR_LATEST_YML_URL);
+  log.info('Update source: GitHub (with mirror configured in latest.yml)');
 }
 
 let mainWindow;
