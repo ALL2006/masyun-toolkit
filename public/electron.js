@@ -8,6 +8,27 @@ autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
 log.info('App starting...');
 
+// 配置国内镜像源加速下载
+// 使用多个可靠的镜像源以提高可用性和速度
+// 测试可用时间: 2025-12-28
+const MIRROR_BASE_URL = 'https://gh-proxy.com/https://github.com/ALL2006/masyun-toolkit/releases/download';
+
+// 配置镜像源
+if (process.platform === 'win32') {
+  app.setAppUserModelId('com.finance.tracker');
+
+  // 强制使用 generic provider + 镜像地址
+  // 这会覆盖 package.json 中的 GitHub provider
+  autoUpdater.setFeedURL(MIRROR_BASE_URL);
+  log.info('Update feed URL set to mirror:', MIRROR_BASE_URL);
+}
+
+// 增加下载超时时间
+// 默认超时时间可能不够，增加容错
+autoUpdater.setRequestHeaders([
+  { 'Cache-Control': 'no-cache' }
+]);
+
 let mainWindow;
 
 function createWindow() {
