@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Layout as AntLayout, Menu, Button, Space, message } from 'antd';
-import { PlusOutlined, BarChartOutlined, DatabaseOutlined, HomeOutlined, WalletOutlined, DollarOutlined, FileExcelOutlined, ReloadOutlined } from '@ant-design/icons';
+import { PlusOutlined, BarChartOutlined, DatabaseOutlined, HomeOutlined, WalletOutlined, DollarOutlined, FileExcelOutlined, ReloadOutlined, BulbOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const { Header, Content } = AntLayout;
@@ -63,6 +63,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       key: '/report',
       icon: <FileExcelOutlined />,
       label: '报表'
+    },
+    {
+      key: '/ai-analysis',
+      icon: <BulbOutlined />,
+      label: 'AI分析'
     },
     {
       key: '/data',

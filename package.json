@@ -1,6 +1,6 @@
 {
   "name": "personal-finance-tracker",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "大学生记账本 - 离线桌面财务管理工具",
   "author": "Your Name <your.email@example.com>",
   "private": true,

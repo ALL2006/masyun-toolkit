@@ -12,6 +12,7 @@ import DataManagement from './pages/DataManagement';
 import AccountManagement from './pages/AccountManagement';
 import BudgetManagement from './pages/BudgetManagement';
 import ReportExport from './pages/ReportExport';
+import AIAnalysis from './pages/AIAnalysis';
 
 const App: React.FC = () => {
   useEffect(() => {
@@ -63,6 +64,7 @@ const App: React.FC = () => {
             <Route path="/accounts" element={<AccountManagement />} />
             <Route path="/budgets" element={<BudgetManagement />} />
             <Route path="/report" element={<ReportExport />} />
+            <Route path="/ai-analysis" element={<AIAnalysis />} />
           </Routes>
         </HashRouter>
       ) : (
@@ -75,6 +77,7 @@ const App: React.FC = () => {
             <Route path="/accounts" element={<AccountManagement />} />
             <Route path="/budgets" element={<BudgetManagement />} />
             <Route path="/report" element={<ReportExport />} />
+            <Route path="/ai-analysis" element={<AIAnalysis />} />
           </Routes>
         </BrowserRouter>
       ))}

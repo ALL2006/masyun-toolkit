@@ -150,3 +150,49 @@ export interface CategoryStat {
 }
 
 export type TimeRange = 'day' | 'week' | 'month';
+
+// ==================== AI 财务分析 ====================
+
+/**
+ * AI 分析数据摘要 - 用于发送给 AI
+ */
+export interface AIAnalysisData {
+  period: string;
+  totalExpense: number;
+  totalIncome: number;
+  balance: number;       // 结余
+  savingsRate: number;   // 储蓄率
+  transactionCount: number;
+  categoryBreakdown: Record<string, CategoryBreakdownItem>;
+  largeTransactions: LargeTransaction[];
+  averagePerTransaction: number;
+}
+
+/**
+ * 分类统计项
+ */
+export interface CategoryBreakdownItem {
+  amount: number;
+  percent: number;
+  count: number;
+}
+
+/**
+ * 大额交易
+ */
+export interface LargeTransaction {
+  date: string;
+  amount: number;
+  category: string;
+  note: string;
+}
+
+/**
+ * AI 分析结果
+ */
+export interface AIAnalysisResult {
+  summary: string;       // 消费亮点
+  insights: string[];    // 需要关注
+  suggestions: string[]; // 行动建议
+  predictedSavings?: string; // 预测节省
+}
