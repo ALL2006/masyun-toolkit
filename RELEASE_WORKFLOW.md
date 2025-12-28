@@ -7,6 +7,7 @@
 - **项目名称**: 大学生记账本
 - **技术栈**: React + TypeScript + Electron + Ant Design
 - **GitHub 仓库**: https://github.com/ALL2006/masyun-toolkit
+- **Gitee 仓库**: https://gitee.com/haobinjun/masyun-toolkit
 - **更新机制**: electron-updater + GitHub Releases
 - **打包格式**: NSIS (.exe 安装程序)
 
@@ -207,32 +208,37 @@ npm run build
 npx electron-builder --win nsis
 ```
 
-### 5.3 发布到 GitHub
+### 5.3 发布到 GitHub/Gitee
 
 #### 方法 A：使用脚本（推荐）
 
-运行以下脚本之一：
 ```powershell
-# 方式 1：完整发布（包含上传）
+# 只发布到 GitHub
 .\publish-release.ps1
 
-# 方式 2：仅上传文件
-.\upload-files.ps1
+# 只发布到 Gitee
+.\publish-gitee-release.ps1
 
-# 方式 3：修复并上传
-.\fix-upload.ps1
+# 同时发布到两个平台（推荐）
+.\publish-all-release.ps1
 ```
 
 #### 方法 B：手动上传
 
+**GitHub**:
 1. 访问：https://github.com/ALL2006/masyun-toolkit/releases/new
 2. 创建新 Release：
    - Tag: `v0.2.0`（对应版本号）
    - Title: `v0.2.0`
    - Description: 更新说明
 3. 上传文件：
-   - `dist\大学生记账本-Setup-0.1.0.exe`
+   - `dist\finance-tracker-setup-x.x.x.exe`
    - `dist\latest.yml`
+
+**Gitee**:
+1. 访问：https://gitee.com/haobinjun/masyun-toolkit/releases
+2. 点击「新建发行版」
+3. 填写版本信息和上传文件
 
 ### 5.4 验证发布
 
@@ -249,8 +255,10 @@ npx electron-builder --win nsis
 
 | 脚本 | 用途 |
 |------|------|
-| `check-release.ps1` | 检查 Release 中的文件列表 |
 | `publish-release.ps1` | 创建新的 GitHub Release |
+| `publish-gitee-release.ps1` | 创建新的 Gitee 发行版 |
+| `publish-all-release.ps1` | 同时发布到 GitHub 和 Gitee |
+| `check-release.ps1` | 检查 Release 中的文件列表 |
 | `upload-files.ps1` | 上传 exe 和 yml 文件 |
 | `fix-upload.ps1` | 删除旧文件并重新上传 |
 | `rename-upload.ps1` | 使用英文文件名上传 |
@@ -258,9 +266,9 @@ npx electron-builder --win nsis
 | `check-cache.ps1` | 检查 electron-builder 缓存 |
 | `create-zip.ps1` | 创建 ZIP 包（备用方案） |
 
-### GitHub Token 配置
+### Token 配置
 
-GitHub Token 已存储在 `local.config.ps1` 文件中（该文件已在 .gitignore 中排除）。
+GitHub 和 Gitee 的 Token 已存储在 `local.config.ps1` 文件中（该文件已在 .gitignore 中排除）。
 
 其他开发者请参考 `local.config.ps1.example` 创建自己的配置文件。
 

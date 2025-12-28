@@ -9,6 +9,8 @@
 [![React](https://img.shields.io/badge/React-19.2.1-61DAFB?logo=react)](https://reactjs.org/)
 [![Electron](https://img.shields.io/badge/Electron-33.3.1-47848F?logo=electron)](https://www.electronjs.org/)
 
+**仓库地址**：[GitHub](https://github.com/ALL2006/masyun-toolkit) | [Gitee](https://gitee.com/haobinjun/masyun-toolkit)
+
 [功能特性](#功能特性) • [快速开始](#快速开始) • [使用指南](#使用指南) • [开发指南](#开发指南)
 
 </div>
@@ -44,7 +46,9 @@
 
 ### 方式一：下载安装包（推荐）
 
-访问 [GitHub Releases](https://github.com/ALL2006/masyun-toolkit/releases) 下载最新版本：
+**国内用户推荐访问 Gitee**：[Gitee Releases](https://gitee.com/haobinjun/masyun-toolkit/releases)
+
+**国际用户访问 GitHub**：[GitHub Releases](https://github.com/ALL2006/masyun-toolkit/releases)
 
 - **Windows**: `finance-tracker-setup-x.x.x.exe`
 - **macOS**: `大学生记账本-x.x.x.dmg` (即将推出)
@@ -53,8 +57,10 @@
 ### 方式二：从源码运行
 
 ```bash
-# 克隆仓库
-git clone https://github.com/ALL2006/masyun-toolkit.git
+# 克隆仓库（选择一个）
+git clone https://github.com/ALL2006/masyun-toolkit.git  # GitHub
+git clone https://gitee.com/haobinjun/masyun-toolkit.git    # Gitee
+
 cd masyun-toolkit/personal-finance-tracker
 
 # 安装依赖
@@ -140,9 +146,11 @@ personal-finance-tracker/
 
 ### 详细文档
 
+- [项目总结](PROJECT_SUMMARY.md) - 项目整体架构和总结
 - [开发指南](DEVELOPMENT_GUIDE.md) - 开发问题和解决方案
 - [发布流程](RELEASE_WORKFLOW.md) - 版本发布完整流程
 - [Android 指南](ANDROID_GUIDE.md) - Android 开发和打包
+- [推广指南](PROMOTION_GUIDE.md) - 项目推广策略和计划
 
 ---
 
@@ -226,6 +234,8 @@ personal-finance-tracker/
 <div align="center">
 
 **如果觉得有用，请给一个 ⭐ Star 支持一下！**
+
+[GitHub Star](https://github.com/ALL2006/masyun-toolkit) | [Gitee Star](https://gitee.com/haobinjun/masyun-toolkit)
 
 Made with ❤️ by [ALL2006](https://github.com/ALL2006)
 

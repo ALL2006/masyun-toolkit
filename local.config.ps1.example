@@ -9,3 +9,11 @@ $githubToken = "你的GitHubToken"
 # GitHub 仓库信息
 $repoOwner = "你的GitHub用户名"
 $repoName = "仓库名称"
+
+# Gitee Token - 用于发布 Release
+# 获取方式：Gitee → 设置 → 安全设置 → 私人令牌 → 生成新令牌
+$giteeToken = "你的GiteeToken"
+
+# Gitee 仓库信息
+$giteeOwner = "你的Gitee用户名"
+$giteeRepoName = "仓库名称"
