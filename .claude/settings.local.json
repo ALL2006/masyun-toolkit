@@ -40,7 +40,12 @@
       "Bash(curl -X POST ^)",
       "Bash(\"https://api.github.com/repos/ALL2006/masyun-toolkit/releases/tags/v1.0.0-timeline\")",
       "Bash(set:*)",
-      "Bash(electron-builder:*)"
+      "Bash(electron-builder:*)",
+      "Bash(npx asar list:*)",
+      "Bash(npx asar extract:*)",
+      "Bash(echo:*)",
+      "Bash(awk:*)",
+      "Bash(timeout:*)"
     ]
   }
 }
