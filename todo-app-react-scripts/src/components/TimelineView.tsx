@@ -9,9 +9,6 @@ import { Task, ViewType } from '../types';
 import { PRIORITY_COLORS } from '../constants';
 import { useTaskStore } from '../store/taskStore';
 
-// 导入CSS
-import 'react-calendar-timeline/lib/Timeline.css';
-
 interface TimelineViewProps {
   view: ViewType;
   selectedDate: Date;
@@ -34,14 +31,14 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
     if (view === 'week') {
       const weekStart = base.startOf('week');
       return {
-        defaultTimeStart: weekStart.valueOf(),
-        defaultTimeEnd: weekStart.add(7, 'day').valueOf()
+        defaultTimeStart: weekStart.toDate(),
+        defaultTimeEnd: weekStart.add(7, 'day').toDate()
       };
     } else {
       const monthStart = base.startOf('month');
       return {
-        defaultTimeStart: monthStart.valueOf(),
-        defaultTimeEnd: monthStart.add(1, 'month').valueOf()
+        defaultTimeStart: monthStart.toDate(),
+        defaultTimeEnd: monthStart.add(1, 'month').toDate()
       };
     }
   }, [view, selectedDate]);
@@ -105,7 +102,6 @@ export const TimelineView: React.FC<TimelineViewProps> = ({
         canMove={true}
         canResize={false}
         canSelect={true}
-        itemsSorted
         itemTouchSendsClick={false}
         stackItems
         onItemMove={handleItemMove}

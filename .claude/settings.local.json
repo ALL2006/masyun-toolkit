@@ -31,7 +31,12 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(if exist \"todo-app-react-scripts\\\\.git\" rmdir /s /q \"todo-app-react-scripts\\\\.git\")",
-      "Bash(git rm:*)"
+      "Bash(git rm:*)",
+      "Bash(git checkout:*)",
+      "Bash(git remote add:*)",
+      "Bash(git push:*)",
+      "Bash(git remote set-url:*)",
+      "Bash(git tag:*)"
     ]
   }
 }
