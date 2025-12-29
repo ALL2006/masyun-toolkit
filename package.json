@@ -35,7 +35,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && copy public\\electron.js build\\electron.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "electron": "electron .",
@@ -59,9 +59,11 @@
     },
     "files": [
       "build/**/*",
-      "node_modules/**/*",
-      "public/electron.js"
+      "node_modules/**/*"
     ],
+    "extraMetadata": {
+      "main": "build/electron.js"
+    },
     "publish": {
       "provider": "github",
       "owner": "ALL2006",
@@ -106,7 +108,7 @@
   },
   "devDependencies": {
     "concurrently": "^9.2.1",
-    "electron": "^33.3.1",
+    "electron": "^30.0.0",
     "electron-builder": "^25.1.8",
     "wait-on": "^9.0.3"
   }

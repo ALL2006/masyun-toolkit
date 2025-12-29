@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter, HashRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import { ConfigProvider, App as AntdApp } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
 import { initDB } from './db/database';
@@ -78,8 +78,9 @@ const App: React.FC = () => {
     };
   }, []);
 
-  // 移动端使用 HashRouter，桌面端使用 BrowserRouter
-  const Router = mobile ? HashRouter : BrowserRouter;
+  // 使用 HashRouter 以兼容 Electron 的 file:// 协议
+  // BrowserRouter 在 file:// 协议下会导致白屏问题
+  const Router = HashRouter;
 
   return (
     <ConfigProvider
