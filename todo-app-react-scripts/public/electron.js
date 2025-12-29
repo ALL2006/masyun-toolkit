@@ -23,16 +23,17 @@ function createWindow() {
   // 移除默认菜单
   Menu.setApplicationMenu(null);
 
-  // 加载应用 - 根据环境选择正确的路径（参考通用打包指南）
+  // 加载应用 - 根据环境选择正确的路径
   const isPackaged = app.isPackaged;
-  const loadPath = isPackaged
-    ? path.join(__dirname, '../build/index.html')  // 打包后：electron.js在resources/app/public/，build在resources/app/build/
-    : 'http://localhost:3000';  // 开发环境：react-scripts 默认端口
 
   if (!isPackaged) {
-    mainWindow.loadURL(loadPath);
+    // 开发环境：加载 React 开发服务器
+    mainWindow.loadURL('http://localhost:3000');
     mainWindow.webContents.openDevTools();
   } else {
+    // 生产环境：加载打包后的 HTML
+    // electron.js 在 asar 中，index.html 也在 asar 的 build 目录中
+    const loadPath = path.join(__dirname, './index.html');
     mainWindow.loadFile(loadPath);
   }
 
