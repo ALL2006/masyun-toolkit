@@ -87,13 +87,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         justifyContent: 'space-between',
         padding: '0 24px'
       }}>
-        <div style={{ 
-          color: 'white', 
-          fontSize: '20px', 
+        <div style={{
+          color: 'white',
+          fontSize: '20px',
           fontWeight: 'bold',
           marginRight: '48px'
         }}>
-          大学生记账本
+          大学生记账本 <span style={{ fontSize: '14px', fontWeight: 'normal' }}>v0.3.1</span>
         </div>
         
         <Menu

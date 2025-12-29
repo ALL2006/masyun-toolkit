@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { App, Progress } from 'antd';
-import { DownloadOutlined, CheckCircleOutlined } from '@ant-design/icons';
+import { App, Progress, Button } from 'antd';
+import { DownloadOutlined, CheckCircleOutlined, InfoCircleOutlined } from '@ant-design/icons';
 
 interface UpdateMessage {
-  type: 'error' | 'available' | 'not-available' | 'downloading' | 'downloaded';
+  type: 'error' | 'available' | 'not-available' | 'downloading' | 'downloaded' | 'manual-download' | 'checking';
   version?: string;
   percent?: number;
   message: string;
+  downloadUrl?: string;
 }
 
 const UpdateNotification: React.FC = () => {
@@ -22,8 +23,18 @@ const UpdateNotification: React.FC = () => {
       const handleUpdateMessage = (_event: any, msg: UpdateMessage) => {
         console.log('收到更新消息:', msg);
 
-        if (msg.type === 'available') {
-          // 发现新版本，显示通知
+        if (msg.type === 'checking') {
+          // 正在检查更新
+          (notification.open as any)({
+    key: 'update-checking',
+    message: '检查更新中',
+    description: msg.message,
+    icon: <InfoCircleOutlined style={{ color: '#1890ff' }} />,
+    duration: 0
+  });
+        } else if (msg.type === 'available') {
+          // 发现新版本，显示通知（自动更新模式）
+          notification.destroy('update-checking');
           (notification.info as any)({
             message: '发现新版本',
             description: `版本 ${msg.version} 已发布，正在自动下载...`,
@@ -32,6 +43,36 @@ const UpdateNotification: React.FC = () => {
           });
 
           setDownloadingPercent(0);
+        } else if (msg.type === 'manual-download') {
+          // 手动下载模式
+          notification.destroy('update-checking');
+          (notification.warning as any)({
+            message: '发现新版本',
+            description: (
+              <div>
+                <div>版本 {msg.version} 已发布</div>
+                <div style={{ marginTop: 8, fontSize: 12, color: '#666' }}>
+                  检测到无法访问 GitHub，请前往官网手动下载
+                </div>
+              </div>
+            ),
+            icon: <InfoCircleOutlined style={{ color: '#faad14' }} />,
+            duration: 0,
+            btn: () => (
+              <Button
+                type="primary"
+                size="small"
+                onClick={() => {
+                  if (msg.downloadUrl && window.open) {
+                    window.open(msg.downloadUrl, '_blank');
+                  }
+                  notification.destroy();
+                }}
+              >
+                前往下载
+              </Button>
+            )
+          });
         } else if (msg.type === 'downloading') {
           // 更新下载进度
           setDownloadingPercent(msg.percent || 0);
@@ -57,8 +98,17 @@ const UpdateNotification: React.FC = () => {
             icon: <CheckCircleOutlined style={{ color: '#52c41a' }} />,
             duration: 0
           });
+        } else if (msg.type === 'not-available') {
+          // 当前已是最新版本
+          notification.destroy('update-checking');
+          (notification.success as any)({
+            message: '已是最新版本',
+            description: msg.message,
+            duration: 3
+          });
         } else if (msg.type === 'error') {
           // 更新错误
+          notification.destroy('update-checking');
           (notification.error as any)({
             message: '更新失败',
             description: msg.message,
