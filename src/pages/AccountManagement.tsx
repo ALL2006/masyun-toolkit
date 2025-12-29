@@ -29,6 +29,26 @@ import { useNavigate } from 'react-router-dom';
 
 const { Title, Text } = Typography;
 
+// 主流银行列表
+const MAIN_BANKS = [
+  '中国工商银行',
+  '中国农业银行',
+  '中国银行',
+  '中国建设银行',
+  '交通银行',
+  '中国邮政储蓄银行',
+  '招商银行',
+  '中信银行',
+  '中国光大银行',
+  '华夏银行',
+  '中国民生银行',
+  '平安银行',
+  '浦发银行',
+  '兴业银行',
+  '广发银行',
+  '其他银行'
+];
+
 const AccountManagement: React.FC = () => {
   const navigate = useNavigate();
   const [accounts, setAccounts] = useState<Account[]>([]);
@@ -36,6 +56,7 @@ const AccountManagement: React.FC = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [editingAccount, setEditingAccount] = useState<Account | null>(null);
   const [transferModalVisible, setTransferModalVisible] = useState(false);
+  const [selectedAccountType, setSelectedAccountType] = useState<string>('cash'); // 跟踪当前选择的账户类型
   const [form] = Form.useForm();
   const [transferForm] = Form.useForm();
 
@@ -68,6 +89,7 @@ const AccountManagement: React.FC = () => {
   // 打开添加账户模态框
   const handleAdd = () => {
     setEditingAccount(null);
+    setSelectedAccountType('cash'); // 重置为默认类型
     form.resetFields();
     form.setFieldsValue({
       type: 'cash',
@@ -80,6 +102,7 @@ const AccountManagement: React.FC = () => {
   // 打开编辑账户模态框
   const handleEdit = (account: Account) => {
     setEditingAccount(account);
+    setSelectedAccountType(account.type); // 设置当前账户类型
     form.setFieldsValue(account);
     setModalVisible(true);
   };
@@ -283,27 +306,56 @@ const AccountManagement: React.FC = () => {
           width={500}
         >
           <Form form={form} layout="vertical" style={{ marginTop: '24px' }}>
-            <Form.Item
-              name="name"
-              label="账户名称"
-              rules={[{ required: true, message: '请输入账户名称' }]}
-            >
-              <Input placeholder="如：招商银行储蓄卡" />
-            </Form.Item>
-
+            {/* 账户类型选择 */}
             {!editingAccount && (
               <Form.Item
                 name="type"
                 label="账户类型"
                 rules={[{ required: true, message: '请选择账户类型' }]}
               >
-                <Select placeholder="选择账户类型">
+                <Select
+                  placeholder="选择账户类型"
+                  onChange={(value) => {
+                    setSelectedAccountType(value);
+                    // 根据账户类型自动填充账户名称
+                    const typeConfig = accountService.getAccountTypes().find(t => t.type === value);
+                    if (typeConfig && value !== 'bank_card' && value !== 'credit_card') {
+                      // 现金、支付宝、微信支付等自动填充名称
+                      form.setFieldValue('name', typeConfig.label);
+                    } else {
+                      // 银行卡/信用卡清空名称，让用户选择银行
+                      form.setFieldValue('name', undefined);
+                    }
+                  }}
+                >
                   {accountService.getAccountTypes().map(({ type, label, icon }) => (
                     <Select.Option key={type} value={type}>
                       {icon} {label}
                     </Select.Option>
                   ))}
                 </Select>
+              </Form.Item>
+            )}
+
+            {/* 账户名称 - 银行卡/信用卡显示银行下拉列表，其他类型自动填充并隐藏 */}
+            {(selectedAccountType === 'bank_card' || selectedAccountType === 'credit_card') ? (
+              <Form.Item
+                name="name"
+                label="账户名称"
+                rules={[{ required: true, message: '请选择银行' }]}
+              >
+                <Select placeholder="选择银行" showSearch>
+                  {MAIN_BANKS.map((bank) => (
+                    <Select.Option key={bank} value={bank}>
+                      {bank}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            ) : (
+              // 其他类型显示隐藏的 Form.Item 来存储值，但不显示输入框
+              <Form.Item name="name" hidden>
+                <Input />
               </Form.Item>
             )}
 

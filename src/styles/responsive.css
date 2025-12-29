@@ -1,0 +1,350 @@
+/* ============================================
+   全局响应式样式
+   ============================================ */
+
+/* === 基础样式 === */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* 移动端优化 */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  /* 防止过度滚动 */
+  overscroll-behavior-y: none;
+}
+
+/* === 移动端通用样式 === */
+@media (max-width: 768px) {
+  /* 容器内边距 */
+  .mobile-container {
+    padding: 16px;
+  }
+
+  /* 卡片样式 */
+  .ant-card {
+    border-radius: 12px !important;
+    margin-bottom: 16px;
+  }
+
+  .ant-card-head {
+    padding: 12px 16px !important;
+    min-height: auto;
+  }
+
+  .ant-card-head-title {
+    font-size: 16px !important;
+    padding: 0 !important;
+  }
+
+  .ant-card-body {
+    padding: 16px !important;
+  }
+
+  /* 按钮样式 */
+  .ant-btn {
+    height: 40px;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+
+  .ant-btn-lg {
+    height: 48px;
+    font-size: 16px;
+  }
+
+  .ant-btn-sm {
+    height: 32px;
+    font-size: 13px;
+  }
+
+  /* 输入框样式 */
+  .ant-input,
+  .ant-select-selector {
+    border-radius: 8px !important;
+    font-size: 14px;
+  }
+
+  /* 表单样式 */
+  .ant-form-item {
+    margin-bottom: 16px;
+  }
+
+  .ant-form-item-label > label {
+    font-size: 14px;
+  }
+
+  /* 表格样式 */
+  .ant-table {
+    font-size: 13px;
+  }
+
+  .ant-table-thead > tr > th {
+    padding: 8px 12px !important;
+    font-size: 13px;
+  }
+
+  .ant-table-tbody > tr > td {
+    padding: 8px 12px !important;
+  }
+
+  /* 统计卡片 */
+  .stat-card {
+    padding: 16px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+  }
+
+  .stat-value {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    color: #999;
+  }
+
+  /* 图表容器 */
+  .chart-container {
+    padding: 16px;
+    border-radius: 12px;
+    background: white;
+    margin-bottom: 16px;
+  }
+
+  /* 顶部标题 */
+  .page-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 16px;
+    color: #333;
+  }
+
+  /* 空状态 */
+  .empty-state {
+    padding: 40px 20px;
+    text-align: center;
+  }
+
+  .empty-state-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+
+  .empty-state-text {
+    font-size: 14px;
+    color: #999;
+  }
+}
+
+/* === 竖屏样式 (portrait) === */
+@media (max-width: 768px) and (orientation: portrait) {
+  /* 主要内容区域 */
+  .main-content {
+    padding: 16px;
+  }
+
+  /* 两列布局变单列 */
+  .two-column-layout {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .two-column-layout > div {
+    width: 100% !important;
+    margin-bottom: 16px;
+  }
+
+  /* 导航菜单 - 横向滚动 */
+  .horizontal-scroll-menu {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .horizontal-scroll-menu::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* 浮动按钮位置 */
+  .fab-button {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+  }
+}
+
+/* === 横屏样式 (landscape) === */
+@media (max-width: 1024px) and (orientation: landscape) {
+  /* 横屏时底部导航栏高度减小 */
+  .mobile-layout-footer {
+    height: 50px !important;
+  }
+
+  /* 内容区域底部内边距减小 */
+  .mobile-layout-content {
+    padding-bottom: 60px !important;
+  }
+
+  /* 浮动按钮位置调整 */
+  .fab-button {
+    bottom: 65px !important;
+  }
+
+  /* 横屏时使用更紧凑的间距 */
+  .compact-spacing .ant-card-body {
+    padding: 12px !important;
+  }
+
+  /* 横屏时表格可以显示更多列 */
+  .ant-table {
+    font-size: 12px;
+  }
+}
+
+/* === 平板样式 === */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .tablet-container {
+    padding: 24px;
+  }
+
+  .ant-card {
+    border-radius: 16px;
+  }
+}
+
+/* === 桌面端样式 === */
+@media (min-width: 1025px) {
+  .desktop-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+
+/* === 安全区域适配 (iPhone X 及以上) === */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .mobile-safe-area-bottom {
+    padding-bottom: calc(60px + env(safe-area-inset-bottom));
+  }
+
+  .mobile-footer-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .fab-button-safe {
+    bottom: calc(80px + env(safe-area-inset-bottom)) !important;
+  }
+}
+
+/* === 横屏时安全区域适配 === */
+@media (orientation: landscape) {
+  @supports (padding: env(safe-area-inset-bottom)) {
+    .mobile-footer-safe {
+      padding-bottom: 0;
+    }
+
+    .fab-button-safe {
+      bottom: 65px !important;
+    }
+  }
+}
+
+/* === 触摸优化 === */
+@media (hover: none) and (pointer: coarse) {
+  /* 增大可点击区域 */
+  .clickable-area {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* 禁用悬停效果 */
+  .ant-btn:hover {
+    transform: none;
+  }
+
+  /* 按下效果 */
+  .ant-btn:active {
+    transform: scale(0.98);
+  }
+}
+
+/* === 深色模式支持 === */
+@media (prefers-color-scheme: dark) {
+  body.dark-mode {
+    background-color: #1f1f1f;
+    color: #e8e8e8;
+  }
+
+  body.dark-mode .ant-card {
+    background-color: #2a2a2a;
+    border-color: #3a3a3a;
+  }
+}
+
+/* === 减少动画 (用户偏好设置) === */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* === 高对比度模式 === */
+@media (prefers-contrast: high) {
+  .ant-btn-primary {
+    border: 2px solid currentColor;
+  }
+
+  .ant-card {
+    border: 1px solid currentColor;
+  }
+}
+
+/* === 横屏特定的布局调整 === */
+@media (max-width: 900px) and (orientation: landscape) {
+  /* 横屏时首页布局调整 */
+  .home-landscape-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .home-landscape-full {
+    grid-column: span 2;
+  }
+
+  /* 横屏时统计卡片变横向 */
+  .landscape-stat-row {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+  }
+
+  .landscape-stat-item {
+    flex: 0 0 auto;
+    min-width: 120px;
+  }
+}
+
+/* === 打印样式 === */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  .ant-layout-footer {
+    display: none !important;
+  }
+}

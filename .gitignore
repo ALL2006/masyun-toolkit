@@ -14,6 +14,7 @@
 
 # misc
 .DS_Store
+.env
 .env.local
 .env.development.local
 .env.test.local
@@ -21,7 +22,23 @@
 
 # 本地配置文件（包含敏感信息）
 local.config.ps1
+# 排除包含 token 的发布脚本
+quick-upload.ps1
+upload-files.ps1
+upload-latest-yml.ps1
+upload-v0.3.1.ps1
+upload-yml.ps1
+re-upload-latest-yml.ps1
+run.bat
+publish-v*.ps1
+publish-gitee-v*.ps1
+create-release-v*.ps1
 
+# IDE
+.idea/
+
+# 临时文件
+nul
 
 npm-debug.log*
 yarn-debug.log*

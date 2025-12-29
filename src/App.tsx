@@ -5,6 +5,7 @@ import zhCN from 'antd/locale/zh_CN';
 import { initDB } from './db/database';
 import UpdateNotification from './components/UpdateNotification';
 import FloatingAddButton from './components/FloatingAddButton';
+import { isMobile } from './utils/device';
 import Home from './pages/Home';
 import AddTransaction from './pages/AddTransaction';
 import Statistics from './pages/Statistics';
@@ -15,10 +16,70 @@ import ReportExport from './pages/ReportExport';
 import AIAnalysis from './pages/AIAnalysis';
 
 const App: React.FC = () => {
+  const mobile = isMobile();
+
   useEffect(() => {
     // 初始化数据库
     initDB().catch(console.error);
+
+    // 添加全局页面过渡动画
+    const style = document.createElement('style');
+    style.innerHTML = `
+      /* 页面内容淡入动画 */
+      .mobile-container, .ant-layout-content {
+        animation: fadeInUp 0.4s ease-out;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* 所有按钮的点击波纹效果增强 */
+      .ant-btn {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      }
+
+      .ant-btn:active {
+        transform: scale(0.97) !important;
+      }
+
+      /* 卡片进入动画 */
+      .ant-card {
+        animation: cardFadeIn 0.5s ease-out;
+      }
+
+      @keyframes cardFadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      /* 平滑滚动 */
+      * {
+        scroll-behavior: smooth;
+      }
+    `;
+    document.head.appendChild(style);
+
+    return () => {
+      document.head.removeChild(style);
+    };
   }, []);
+
+  // 移动端使用 HashRouter，桌面端使用 BrowserRouter
+  const Router = mobile ? HashRouter : BrowserRouter;
 
   return (
     <ConfigProvider
@@ -31,13 +92,15 @@ const App: React.FC = () => {
           colorError: '#FF6B6B',
           borderRadius: 8,
           fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+          motionDurationSlow: '0.4s',
+          motionDurationFast: '0.2s',
         },
         components: {
           Button: {
             borderRadius: 8,
           },
           Card: {
-            borderRadius: 16,
+            borderRadius: mobile ? 12 : 16,
           },
           Input: {
             borderRadius: 8,
@@ -52,10 +115,11 @@ const App: React.FC = () => {
       }}
     >
       <AntdApp>
-        <UpdateNotification />
-        <FloatingAddButton />
-        {(window.location.protocol === 'file:' ? (
-        <HashRouter>
+        {/* 仅桌面端显示更新通知和浮动按钮 */}
+        {!mobile && <UpdateNotification />}
+        {!mobile && <FloatingAddButton />}
+
+        <Router>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/add" element={<AddTransaction />} />
@@ -66,21 +130,7 @@ const App: React.FC = () => {
             <Route path="/report" element={<ReportExport />} />
             <Route path="/ai-analysis" element={<AIAnalysis />} />
           </Routes>
-        </HashRouter>
-      ) : (
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/add" element={<AddTransaction />} />
-            <Route path="/statistics" element={<Statistics />} />
-            <Route path="/data" element={<DataManagement />} />
-            <Route path="/accounts" element={<AccountManagement />} />
-            <Route path="/budgets" element={<BudgetManagement />} />
-            <Route path="/report" element={<ReportExport />} />
-            <Route path="/ai-analysis" element={<AIAnalysis />} />
-          </Routes>
-        </BrowserRouter>
-      ))}
+        </Router>
       </AntdApp>
     </ConfigProvider>
   );

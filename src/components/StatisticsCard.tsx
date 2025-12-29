@@ -17,7 +17,17 @@ const StatisticsCard: React.FC<StatisticsCardProps> = ({ totalIncome, totalExpen
             borderRadius: '16px',
             background: 'linear-gradient(135deg, #52C41A 0%, #73D13D 100%)',
             border: 'none',
-            boxShadow: '0 4px 16px rgba(82, 196, 26, 0.3)'
+            boxShadow: '0 4px 16px rgba(82, 196, 26, 0.3)',
+            transition: 'all 0.3s ease',
+            cursor: 'default'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-4px) scale(1.02)';
+            e.currentTarget.style.boxShadow = '0 8px 24px rgba(82, 196, 26, 0.4)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0) scale(1)';
+            e.currentTarget.style.boxShadow = '0 4px 16px rgba(82, 196, 26, 0.3)';
           }}
         >
           <Statistic
@@ -36,7 +46,17 @@ const StatisticsCard: React.FC<StatisticsCardProps> = ({ totalIncome, totalExpen
             borderRadius: '16px',
             background: 'linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%)',
             border: 'none',
-            boxShadow: '0 4px 16px rgba(255, 107, 107, 0.3)'
+            boxShadow: '0 4px 16px rgba(255, 107, 107, 0.3)',
+            transition: 'all 0.3s ease',
+            cursor: 'default'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-4px) scale(1.02)';
+            e.currentTarget.style.boxShadow = '0 8px 24px rgba(255, 107, 107, 0.4)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0) scale(1)';
+            e.currentTarget.style.boxShadow = '0 4px 16px rgba(255, 107, 107, 0.3)';
           }}
         >
           <Statistic
@@ -53,11 +73,23 @@ const StatisticsCard: React.FC<StatisticsCardProps> = ({ totalIncome, totalExpen
         <Card
           style={{
             borderRadius: '16px',
-            background: balance >= 0 
+            background: balance >= 0
               ? 'linear-gradient(135deg, #4A90E2 0%, #6BA7F8 100%)'
               : 'linear-gradient(135deg, #FFA940 0%, #FFC069 100%)',
             border: 'none',
-            boxShadow: `0 4px 16px rgba(${balance >= 0 ? '74, 144, 226' : '255, 169, 64'}, 0.3)`
+            boxShadow: `0 4px 16px rgba(${balance >= 0 ? '74, 144, 226' : '255, 169, 64'}, 0.3)`,
+            transition: 'all 0.3s ease',
+            cursor: 'default'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-4px) scale(1.02)';
+            const shadowColor = balance >= 0 ? '74, 144, 226' : '255, 169, 64';
+            e.currentTarget.style.boxShadow = `0 8px 24px rgba(${shadowColor}, 0.4)`;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0) scale(1)';
+            const shadowColor = balance >= 0 ? '74, 144, 226' : '255, 169, 64';
+            e.currentTarget.style.boxShadow = `0 4px 16px rgba(${shadowColor}, 0.3)`;
           }}
         >
           <Statistic

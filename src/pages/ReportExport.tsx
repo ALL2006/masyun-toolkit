@@ -16,7 +16,7 @@ import {
 } from 'antd';
 import {
   FileExcelOutlined,
-  DownloadOutlined,
+  FolderOpenOutlined,
   BarChartOutlined
 } from '@ant-design/icons';
 import Layout from '../components/Layout';
@@ -34,6 +34,7 @@ const ReportExport: React.FC = () => {
   const [customDateRange, setCustomDateRange] = useState<[any, any]>([null, null]);
   const [loading, setLoading] = useState(false);
   const [previewData, setPreviewData] = useState<ReportData | null>(null);
+  const [exportedFileUri, setExportedFileUri] = useState<string | null>(null);
 
   const years = Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - 2 + i);
   const months = Array.from({ length: 12 }, (_, i) => i + 1);
@@ -71,10 +72,30 @@ const ReportExport: React.FC = () => {
     }
 
     try {
-      await exportService.exportAndDownloadExcel(previewData);
-      message.success('报表导出成功');
+      const result = await exportService.exportAndDownloadExcel(previewData);
+
+      if (result && result.uri) {
+        // 移动端：保存成功，显示文件位置
+        setExportedFileUri(result.uri);
+        message.success({
+          content: '报表导出成功！文件已保存到：Documents/大学生记账本/',
+          duration: 5,
+        });
+      } else {
+        // 桌面端：直接下载
+        message.success('报表导出成功！');
+      }
     } catch (error) {
       message.error('导出失败');
+    }
+  };
+
+  // 查看导出的文件
+  const handleViewFile = () => {
+    if (exportedFileUri) {
+      // 使用 Capacitor 的 Filesystem API 打开文件
+      // 在 Android 上，这会让用户选择应用打开文件
+      window.open(exportedFileUri, '_blank');
     }
   };
 
@@ -222,17 +243,31 @@ const ReportExport: React.FC = () => {
             <Card
               style={{ marginBottom: '24px', borderRadius: '16px', boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)' }}
             >
-              <Space>
-                <Text strong>{previewData.meta.title}</Text>
-                <Button
-                  type="primary"
-                  icon={<FileExcelOutlined />}
-                  onClick={handleExportExcel}
-                  size="large"
-                  style={{ borderRadius: '8px', background: '#52C41A', borderColor: '#52C41A' }}
-                >
-                  导出 Excel
-                </Button>
+              <Space direction="vertical" style={{ width: '100%' }}>
+                <Space>
+                  <Text strong>{previewData.meta.title}</Text>
+                </Space>
+                <Space>
+                  <Button
+                    type="primary"
+                    icon={<FileExcelOutlined />}
+                    onClick={handleExportExcel}
+                    size="large"
+                    style={{ borderRadius: '8px', background: '#52C41A', borderColor: '#52C41A' }}
+                  >
+                    导出 Excel
+                  </Button>
+                  {exportedFileUri && (
+                    <Button
+                      icon={<FolderOpenOutlined />}
+                      onClick={handleViewFile}
+                      size="large"
+                      style={{ borderRadius: '8px' }}
+                    >
+                      查看文件
+                    </Button>
+                  )}
+                </Space>
               </Space>
             </Card>
 

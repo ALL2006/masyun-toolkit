@@ -1,4 +1,5 @@
 import * as XLSX from 'xlsx';
+import { Filesystem, Directory } from '@capacitor/filesystem';
 import { ReportData } from '../types';
 
 export class ExportService {
@@ -76,8 +77,68 @@ export class ExportService {
     return new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
   }
 
-  // 下载文件
-  downloadBlob(blob: Blob, filename: string): void {
+  // 检查是否在移动端（Capacitor 环境）
+  private isCapacitor(): boolean {
+    return !!(window as any).Capacitor;
+  }
+
+  // 将 Blob 转换为 Base64
+  private blobToBase64(blob: Blob): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64 = (reader.result as string).split(',')[1];
+        resolve(base64);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  // 移动端保存文件
+  private async saveFileMobile(blob: Blob, filename: string): Promise<{ path: string; uri: string }> {
+    try {
+      const base64 = await this.blobToBase64(blob);
+
+      // 检查并创建目录
+      const dirPath = '大学生记账本';
+      try {
+        await Filesystem.mkdir({
+          path: dirPath,
+          directory: Directory.Documents,
+          recursive: false
+        });
+      } catch (e) {
+        // 目录可能已存在，忽略错误
+      }
+
+      // 保存文件到 Documents/大学生记账本/
+      const filePath = `${dirPath}/${filename}`;
+      await Filesystem.writeFile({
+        path: filePath,
+        data: base64,
+        directory: Directory.Documents,
+        recursive: true
+      });
+
+      // 获取文件的 URI，用于打开文件
+      const uriResult = await Filesystem.getUri({
+        path: filePath,
+        directory: Directory.Documents
+      });
+
+      return {
+        path: filePath,
+        uri: uriResult.uri
+      };
+    } catch (error) {
+      console.error('保存文件失败:', error);
+      throw new Error('文件保存失败');
+    }
+  }
+
+  // 桌面端下载文件
+  private downloadFileDesktop(blob: Blob, filename: string): void {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
@@ -88,11 +149,21 @@ export class ExportService {
     URL.revokeObjectURL(url);
   }
 
-  // 导出并下载 Excel
-  async exportAndDownloadExcel(reportData: ReportData): Promise<void> {
+  // 导出并下载 Excel（自动检测平台）
+  // 返回值：移动端返回文件路径和URI，桌面端返回 null
+  async exportAndDownloadExcel(reportData: ReportData): Promise<{ path?: string; uri?: string } | null> {
     const blob = await this.exportToExcel(reportData);
     const filename = `${reportData.meta.title}_${new Date().toISOString().split('T')[0]}.xlsx`;
-    this.downloadBlob(blob, filename);
+
+    if (this.isCapacitor()) {
+      // 移动端：保存到 Documents 目录
+      const result = await this.saveFileMobile(blob, filename);
+      return result;
+    } else {
+      // 桌面端：使用浏览器下载
+      this.downloadFileDesktop(blob, filename);
+      return null;
+    }
   }
 }
 

@@ -10,6 +10,7 @@
     "@capacitor/android": "^7.4.4",
     "@capacitor/cli": "^7.4.4",
     "@capacitor/core": "^7.4.4",
+    "@capacitor/filesystem": "^7.1.6",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
@@ -44,7 +45,11 @@
     "build-electron-win-unsigned": "npm run build && set CSC_LINK_SKIP=1 && electron-builder --win",
     "build-electron-mac": "npm run build && electron-builder --mac",
     "dist": "npm run build && electron-builder --publish=never",
-    "publish": "npm run build && electron-builder --publish=always"
+    "publish": "npm run build && electron-builder --publish=always",
+    "android:build": "npm run build && npx cap sync android",
+    "android:open": "npx cap open android",
+    "android:run": "npm run android:build && npx cap run android",
+    "android:sync": "npx cap sync android"
   },
   "build": {
     "appId": "com.finance.tracker",
@@ -63,7 +68,9 @@
       "repo": "masyun-toolkit"
     },
     "win": {
-      "target": ["nsis"],
+      "target": [
+        "nsis"
+      ],
       "artifactName": "finance-tracker-setup-${version}.${ext}",
       "signAndEditExecutable": false
     },

@@ -1,38 +1,84 @@
 import React, { useState } from 'react';
 import { Card, Button, Upload, Typography, Space, Modal, message, Divider } from 'antd';
-import { UploadOutlined, DownloadOutlined, DeleteOutlined, QuestionCircleOutlined, ReloadOutlined } from '@ant-design/icons';
+import { UploadOutlined, DownloadOutlined, DeleteOutlined, QuestionCircleOutlined, ReloadOutlined, FolderOpenOutlined } from '@ant-design/icons';
 import Layout from '../components/Layout';
 import { transactionService } from '../services/transactionService';
 import { categoryService } from '../services/categoryService';
+import { Filesystem, Directory } from '@capacitor/filesystem';
 
 const { Title, Text, Paragraph } = Typography;
 
 const DataManagement: React.FC = () => {
   const [loading, setLoading] = useState(false);
+  const [exportedFileUri, setExportedFileUri] = useState<string | null>(null);
+
+  // 检查是否在移动端
+  const isCapacitor = () => !!(window as any).Capacitor;
 
   // 导出数据
   const handleExport = async () => {
     try {
       setLoading(true);
       const jsonData = await transactionService.exportData();
-      
-      // 创建下载链接
-      const blob = new Blob([jsonData], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `记账数据_${new Date().toISOString().split('T')[0]}.json`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-      
-      message.success('数据导出成功！');
+      const filename = `记账数据_${new Date().toISOString().split('T')[0]}.json`;
+
+      if (isCapacitor()) {
+        // 移动端：保存到 Documents 目录
+        const dirPath = '大学生记账本';
+        try {
+          await Filesystem.mkdir({
+            path: dirPath,
+            directory: Directory.Documents,
+            recursive: false
+          });
+        } catch (e) {
+          // 目录可能已存在，忽略错误
+        }
+
+        const filePath = `${dirPath}/${filename}`;
+        await Filesystem.writeFile({
+          path: filePath,
+          data: jsonData,
+          directory: Directory.Documents,
+          recursive: true
+        });
+
+        // 获取文件 URI
+        const uriResult = await Filesystem.getUri({
+          path: filePath,
+          directory: Directory.Documents
+        });
+
+        setExportedFileUri(uriResult.uri);
+        message.success({
+          content: '数据导出成功！文件已保存到：Documents/大学生记账本/',
+          duration: 5,
+        });
+      } else {
+        // 桌面端：使用浏览器下载
+        const blob = new Blob([jsonData], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        message.success('数据导出成功！');
+      }
     } catch (error) {
       message.error('数据导出失败');
       console.error('导出失败:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // 查看导出的文件
+  const handleViewFile = () => {
+    if (exportedFileUri) {
+      window.open(exportedFileUri, '_blank');
     }
   };
 
@@ -125,20 +171,34 @@ const DataManagement: React.FC = () => {
               <Paragraph type="secondary" style={{ marginBottom: '16px' }}>
                 将您的所有记账记录导出为 JSON 文件，可用于备份或迁移数据
               </Paragraph>
-              <Button
-                type="primary"
-                icon={<DownloadOutlined />}
-                onClick={handleExport}
-                loading={loading}
-                size="large"
-                style={{
-                  background: '#4A90E2',
-                  borderColor: '#4A90E2',
-                  borderRadius: '8px'
-                }}
-              >
-                导出数据
-              </Button>
+              <Space>
+                <Button
+                  type="primary"
+                  icon={<DownloadOutlined />}
+                  onClick={handleExport}
+                  loading={loading}
+                  size="large"
+                  style={{
+                    background: '#4A90E2',
+                    borderColor: '#4A90E2',
+                    borderRadius: '8px'
+                  }}
+                >
+                  导出数据
+                </Button>
+                {exportedFileUri && (
+                  <Button
+                    icon={<FolderOpenOutlined />}
+                    onClick={handleViewFile}
+                    size="large"
+                    style={{
+                      borderRadius: '8px'
+                    }}
+                  >
+                    查看文件
+                  </Button>
+                )}
+              </Space>
             </div>
 
             <Divider />
