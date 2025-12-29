@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimelineFlow 测试页面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        .container {
+            text-align: center;
+            padding: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+        .status {
+            padding: 15px 30px;
+            background: rgba(0,255,0,0.2);
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .info {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 30px;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 16px;
+            background: white;
+            color: #667eea;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        button:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TimelineFlow</h1>
+        <p>时间线任务管理应用</p>
+        <div class="status" id="status">
+            <strong>✓ 页面加载成功！</strong>
+        </div>
+        <div id="time"></div>
+        <button onclick="testLocalStorage()">测试本地存储</button>
+        <button onclick="goToApp()">打开主应用</button>
+        <div class="info">
+            <p>如果看到这个页面，说明 Electron 运行正常。</p>
+            <p>如果是主应用出现白屏，可能是 JavaScript 代码的问题。</p>
+        </div>
+    </div>
+
+    <script>
+        // 更新时间
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('time').innerHTML = '<strong>当前时间:</strong> ' + now.toLocaleString('zh-CN');
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        // 测试本地存储
+        function testLocalStorage() {
+            try {
+                localStorage.setItem('test', 'success');
+                localStorage.removeItem('test');
+                document.getElementById('status').innerHTML = '<strong>✓ 本地存储正常！</strong>';
+            } catch (e) {
+                document.getElementById('status').innerHTML = '<strong>✗ 本地存储失败:</strong> ' + e.message;
+            }
+        }
+
+        // 打开主应用
+        function goToApp() {
+            window.location.href = './index.html';
+        }
+
+        // 检查主应用数据
+        const savedData = localStorage.getItem('timelineflow-tasks');
+        if (savedData) {
+            try {
+                const data = JSON.parse(savedData);
+                console.log('Found saved data:', data.tasks ? data.tasks.length + ' tasks' : 'no tasks');
+            } catch (e) {
+                console.error('Saved data is corrupted:', e);
+            }
+        }
+    </script>
+</body>
+</html>
