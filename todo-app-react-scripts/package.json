@@ -1,0 +1,93 @@
+{
+  "name": "todo-app-react-scripts",
+  "version": "0.1.0",
+  "private": true,
+  "main": "public/electron.js",
+  "homepage": "./",
+  "dependencies": {
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.1",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.18.126",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "css-select-base-adapter": "^0.1.1",
+    "dayjs": "^1.11.19",
+    "electron-log": "^5.4.3",
+    "electron-store": "^11.0.2",
+    "electron-updater": "^6.6.2",
+    "react": "^19.2.3",
+    "react-calendar-timeline": "^0.30.0-beta.4",
+    "react-dom": "^19.2.3",
+    "react-scripts": "5.0.1",
+    "typescript": "^4.9.5",
+    "web-vitals": "^2.1.4",
+    "zustand": "^5.0.9"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "electron": "electron .",
+    "electron-dev": "concurrently \"npm start\" \"wait-on http://localhost:3000 && electron .\"",
+    "build-electron": "npm run build && electron-builder",
+    "build-electron-win": "npm run build && electron-builder --win",
+    "build-electron-win-unsigned": "npm run build && set CSC_LINK_SKIP=1 && electron-builder --win",
+    "build-electron-mac": "npm run build && electron-builder --mac",
+    "publish": "npm run build && electron-builder --publish=always"
+  },
+  "devDependencies": {
+    "@types/react-calendar-timeline": "^0.28.6",
+    "concurrently": "^9.2.1",
+    "electron": "^33.3.1",
+    "electron-builder": "^25.1.8",
+    "wait-on": "^9.0.3"
+  },
+  "build": {
+    "appId": "com.todoapp.app",
+    "productName": "待办事项管理",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "build/**/*",
+      "node_modules/**/*",
+      "public/electron.js"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "artifactName": "todo-app-setup-${version}.${ext}",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "allowElevation": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

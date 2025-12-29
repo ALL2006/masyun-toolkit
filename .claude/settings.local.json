@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm create vite:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npm run build)",
+      "Bash(npm run build:*)",
+      "Bash(npm run electron:dev)",
+      "Bash(node:*)",
+      "Bash(npx electron:*)",
+      "Bash(cat:*)",
+      "Bash(npx electron@latest:*)",
+      "Bash(node_modules/electron/dist/electron.exe:*)",
+      "Bash(npx electron-vite@latest todo-desktop --template react-ts:*)",
+      "Bash(npx create-electron-vite@latest:*)",
+      "Bash(npm run electron-dev:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(npm start)",
+      "Bash(copy \"c:\\\\Users\\\\H3123\\\\Documents\\\\trae_projects\\\\simple-account\\\\.npmrc\" \"d:\\\\待办事项管理平台\\\\todo-app\\\\.npmrc\")",
+      "Bash(powershell:*)",
+      "Bash(npx create-react-app:*)",
+      "Bash(tasklist:*)",
+      "Bash(findstr:*)",
+      "Bash(dir:*)",
+      "Bash(tree:*)",
+      "Bash(copy:*)",
+      "Bash(npm run build-electron-win-unsigned:*)",
+      "Bash(git init:*)",
+      "Bash(git ls-remote:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(if exist \"todo-app-react-scripts\\\\.git\" rmdir /s /q \"todo-app-react-scripts\\\\.git\")",
+      "Bash(git rm:*)"
+    ]
+  }
+}
