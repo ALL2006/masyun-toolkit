@@ -1,7 +1,7 @@
 {
   "name": "personal-finance-tracker",
-  "version": "0.3.2",
-  "description": "大学生记账本 - 智能双模式更新",
+  "version": "0.4.0",
+  "description": "大学生记账本 - UI全面美化升级",
   "author": "Your Name <your.email@example.com>",
   "private": true,
   "main": "public/electron.js",
