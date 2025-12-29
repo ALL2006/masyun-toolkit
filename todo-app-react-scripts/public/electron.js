@@ -28,6 +28,16 @@ function createWindow() {
     mainWindow.loadFile(loadPath);
   }
 
+  // 错误处理 - 打开开发者工具以便调试
+  mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
+    console.error('Failed to load:', errorCode, errorDescription);
+    mainWindow.webContents.openDevTools();
+  });
+
+  mainWindow.webContents.on('render-process-gone', (event, details) => {
+    console.error('Renderer process gone:', details);
+  });
+
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
   });

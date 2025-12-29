@@ -45,7 +45,8 @@
       "Bash(npx asar extract:*)",
       "Bash(echo:*)",
       "Bash(awk:*)",
-      "Bash(timeout:*)"
+      "Bash(timeout:*)",
+      "Bash(grep:*)"
     ]
   }
 }
