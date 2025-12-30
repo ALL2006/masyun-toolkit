@@ -25,6 +25,7 @@ export interface CreateTaskInput {
   startTime: Date;
   endTime: Date;
   priority: TaskPriority;
+  status?: TaskStatus;  // 可选，默认为 'todo'
   tags?: string[];
 }
 
@@ -32,6 +33,7 @@ export interface CreateTaskInput {
 export type TaskUpdateParams = Partial<Omit<CreateTaskInput, 'startTime' | 'endTime'>> & {
   startTime?: Date;
   endTime?: Date;
+  status?: TaskStatus;
 };
 
 // 视图类型

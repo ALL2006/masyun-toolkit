@@ -1,4 +1,4 @@
-import { TaskPriority } from '../types';
+import { TaskPriority, TaskStatus } from '../types';
 
 // 优先级颜色方案
 export const PRIORITY_COLORS: Record<TaskPriority, string> = {
@@ -14,6 +14,27 @@ export const PRIORITY_LABELS: Record<TaskPriority, string> = {
   high: '重要',
   medium: '一般',
   low: '低优先级'
+};
+
+// 状态颜色
+export const STATUS_COLORS: Record<TaskStatus, string> = {
+  'todo': '#1890FF',
+  'in-progress': '#FAAD14',
+  'done': '#52C41A'
+};
+
+// 状态标签
+export const STATUS_LABELS: Record<TaskStatus, string> = {
+  'todo': '待办',
+  'in-progress': '进行中',
+  'done': '已完成'
+};
+
+// 状态图标
+export const STATUS_ICONS: Record<TaskStatus, string> = {
+  'todo': '📋',
+  'in-progress': '🔄',
+  'done': '✅'
 };
 
 // 默认设置

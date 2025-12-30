@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useTaskStore } from './store/taskStore';
-import { TimelineView } from './components/TimelineView';
+import { CalendarView } from './components/CalendarView';
 import { TaskDialog } from './components/TaskDialog';
 import { ErrorBoundary } from './components/ErrorBoundary';
-import { Task, CreateTaskInput } from './types';
+import { Task, CreateTaskInput, TaskStatus } from './types';
 import dayjs from 'dayjs';
 import './App.css';
 
@@ -25,11 +25,13 @@ function App() {
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [dialogMode, setDialogMode] = useState<'create' | 'edit'>('create');
   const [hasInitialized, setHasInitialized] = useState(false);
+  const [initialTimeValues, setInitialTimeValues] = useState<{ startTime: Date; endTime: Date } | null>(null);
 
   // 打开创建任务对话框
   const handleCreateTask = useCallback(() => {
     setEditingTask(null);
     setDialogMode('create');
+    setInitialTimeValues(null);
     setIsDialogOpen(true);
   }, []);
 
@@ -37,6 +39,7 @@ function App() {
   const handleEditTask = useCallback((task: Task) => {
     setEditingTask(task);
     setDialogMode('edit');
+    setInitialTimeValues(null);
     setIsDialogOpen(true);
   }, []);
 
@@ -66,6 +69,26 @@ function App() {
       endTime: newEndTime
     });
   }, [updateTask]);
+
+  // 处理状态切换（循环：todo -> in-progress -> done -> todo）
+  const handleStatusToggle = useCallback((taskId: string) => {
+    updateTask(taskId, { status: 'in-progress' }); // 简化版本
+  }, [updateTask]);
+
+  // 处理点击空白处创建任务
+  const handleCanvasClick = useCallback((clickDate: Date, groupId?: string) => {
+    // 预填充时间：点击时间对齐到整点，持续1小时
+    const startTime = dayjs(clickDate).startOf('hour').toDate();
+    const endTime = dayjs(startTime).add(1, 'hour').toDate();
+
+    // 打开创建对话框
+    setEditingTask(null);
+    setDialogMode('create');
+
+    // 暂存初始时间值（用于传递给 TaskDialog）
+    setInitialTimeValues({ startTime, endTime });
+    setIsDialogOpen(true);
+  }, []);
 
   // 导航到今天
   const goToToday = useCallback(() => {
@@ -131,7 +154,8 @@ function App() {
     input.click();
   }, [importTasks]);
 
-  // 初始化：加载本地存储的数据
+  // 初始化：加载本地存储的数据 - 暂时禁用
+  /*
   useEffect(() => {
     if (hasInitialized) return;
 
@@ -148,8 +172,10 @@ function App() {
 
     setHasInitialized(true);
   }, [hasInitialized, importTasks]);
+  */
 
-  // 添加示例数据（仅当首次使用时）
+  // 添加示例数据（仅当首次使用时） - 暂时禁用
+  /*
   useEffect(() => {
     if (!hasInitialized || tasks.length > 0) return;
 
@@ -187,13 +213,16 @@ function App() {
     sampleTasks.forEach((task) => addTask(task));
     console.log('Added sample tasks');
   }, [hasInitialized, tasks.length, addTask]);
+  */
 
-  // 自动保存
+  // 自动保存 - 暂时禁用
+  /*
   useEffect(() => {
     if (hasInitialized && tasks.length > 0) {
       localStorage.setItem('timelineflow-tasks', exportTasks());
     }
   }, [tasks, hasInitialized, exportTasks]);
+  */
 
   return (
     <ErrorBoundary>
@@ -267,13 +296,14 @@ function App() {
         </div>
       </div>
 
-      {/* 时间线视图 */}
-      <div className="timeline-wrapper">
-        <TimelineView
+      {/* 日历视图 */}
+      <div className="calendar-wrapper">
+        <CalendarView
           view={currentView}
           selectedDate={selectedDate}
           onTaskClick={handleEditTask}
           onTimeChange={handleTimeChange}
+          onCanvasClick={handleCanvasClick}
         />
       </div>
 
@@ -290,7 +320,13 @@ function App() {
                 startTime: editingTask.startTime,
                 endTime: editingTask.endTime,
                 priority: editingTask.priority,
+                status: editingTask.status,
                 tags: editingTask.tags
+              }
+            : initialTimeValues
+            ? {
+                startTime: initialTimeValues.startTime,
+                endTime: initialTimeValues.endTime
               }
             : undefined
         }

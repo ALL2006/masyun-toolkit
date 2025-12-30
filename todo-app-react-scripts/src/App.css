@@ -18,7 +18,6 @@ body {
   display: flex;
   flex-direction: column;
   background: #f5f5f5;
-  overflow: hidden;
 }
 
 /* 顶部导航栏 */
@@ -193,6 +192,73 @@ body {
 
 .timeline-container {
   min-height: 100%;
+}
+
+/* 日历容器 */
+.calendar-wrapper {
+  flex: 1;
+  overflow: auto;
+  background: white;
+  min-height: 0;
+}
+
+.calendar-container {
+  width: 100%;
+  height: 100%;
+  min-height: 600px;
+}
+
+/* FullCalendar 样式优化 */
+.fc {
+  font-size: 14px;
+}
+
+.fc .fc-toolbar {
+  margin-bottom: 12px;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.fc .fc-button {
+  background-color: #1890ff;
+  border-color: #1890ff;
+}
+
+.fc .fc-button:hover {
+  background-color: #40a9ff;
+  border-color: #40a9ff;
+}
+
+.fc .fc-button-active {
+  background-color: #096dd9;
+  border-color: #096dd9;
+}
+
+.fc .fc-daygrid-day,
+.fc .fc-timegrid-slot {
+  cursor: pointer;
+}
+
+.fc .fc-daygrid-day:hover {
+  background-color: #f5f5f5;
+}
+
+.fc .fc-timegrid-slot:hover {
+  background-color: #f5f5f5;
+}
+
+.fc-event {
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 2px 4px;
+  font-size: 12px;
+}
+
+.fc-event:hover {
+  opacity: 0.8;
 }
 
 /* 时间线任务项样式 */
@@ -436,6 +502,30 @@ body {
 
 .react-calendar-timeline .rct-calendar-header {
   border-color: #e8e8e8;
+}
+
+/* 任务状态样式 */
+.task-item.task-done {
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+
+.task-item.task-in-progress {
+  box-shadow: 0 0 0 2px #FAAD14 !important;
+}
+
+.task-item .status-badge {
+  transition: all 0.2s;
+}
+
+.task-item .status-badge:hover {
+  background: rgba(255, 255, 255, 0.35) !important;
+  transform: scale(1.05);
+}
+
+/* 多日任务样式 */
+.task-item.multi-day {
+  border-left-width: 6px;
 }
 
 /* 滚动条样式 */
