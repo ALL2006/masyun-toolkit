@@ -126,7 +126,15 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
     try {
       const data = JSON.parse(jsonData);
       if (data.tasks && Array.isArray(data.tasks)) {
-        set({ tasks: data.tasks });
+        // 将日期字符串转换回 Date 对象
+        const tasks = data.tasks.map((task: any) => ({
+          ...task,
+          startTime: new Date(task.startTime),
+          endTime: new Date(task.endTime),
+          createdAt: task.createdAt ? new Date(task.createdAt) : new Date(),
+          updatedAt: task.updatedAt ? new Date(task.updatedAt) : new Date()
+        }));
+        set({ tasks });
       }
       if (data.settings) {
         set((state) => ({
