@@ -3,7 +3,7 @@ import { useTaskStore } from './store/taskStore';
 import { CalendarView } from './components/CalendarView';
 import { TaskDialog } from './components/TaskDialog';
 import { ErrorBoundary } from './components/ErrorBoundary';
-import { Task, CreateTaskInput, TaskStatus } from './types';
+import { Task, CreateTaskInput } from './types';
 import dayjs from 'dayjs';
 import './App.css';
 
@@ -12,6 +12,8 @@ function App() {
     tasks,
     currentView,
     selectedDate,
+    isInitialized,
+    initialize,
     setCurrentView,
     setSelectedDate,
     addTask,
@@ -24,8 +26,12 @@ function App() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [dialogMode, setDialogMode] = useState<'create' | 'edit'>('create');
-  const [hasInitialized, setHasInitialized] = useState(false);
   const [initialTimeValues, setInitialTimeValues] = useState<{ startTime: Date; endTime: Date } | null>(null);
+
+  // 初始化：从 Capacitor Preferences 加载数据
+  useEffect(() => {
+    initialize();
+  }, [initialize]);
 
   // 打开创建任务对话框
   const handleCreateTask = useCallback(() => {
@@ -44,35 +50,35 @@ function App() {
   }, []);
 
   // 提交任务（创建或更新）
-  const handleSubmit = useCallback((data: CreateTaskInput) => {
+  const handleSubmit = useCallback(async (data: CreateTaskInput) => {
     if (dialogMode === 'create') {
-      addTask(data);
+      await addTask(data);
     } else if (editingTask) {
-      updateTask(editingTask.id, data);
+      await updateTask(editingTask.id, data);
     }
     setIsDialogOpen(false);
     setEditingTask(null);
   }, [dialogMode, editingTask, addTask, updateTask]);
 
   // 删除任务
-  const handleDeleteTask = useCallback((taskId: string) => {
+  const handleDeleteTask = useCallback(async (taskId: string) => {
     if (window.confirm('确定要删除这个任务吗？')) {
-      deleteTask(taskId);
+      await deleteTask(taskId);
       setIsDialogOpen(false);
     }
   }, [deleteTask]);
 
   // 处理任务时间拖拽
-  const handleTimeChange = useCallback((taskId: string, newStartTime: Date, newEndTime: Date) => {
-    updateTask(taskId, {
+  const handleTimeChange = useCallback(async (taskId: string, newStartTime: Date, newEndTime: Date) => {
+    await updateTask(taskId, {
       startTime: newStartTime,
       endTime: newEndTime
     });
   }, [updateTask]);
 
   // 处理状态切换（循环：todo -> in-progress -> done -> todo）
-  const handleStatusToggle = useCallback((taskId: string) => {
-    updateTask(taskId, { status: 'in-progress' }); // 简化版本
+  const handleStatusToggle = useCallback(async (taskId: string) => {
+    await updateTask(taskId, { status: 'in-progress' });
   }, [updateTask]);
 
   // 处理点击空白处创建任务
@@ -114,8 +120,8 @@ function App() {
   }, [currentView, selectedDate, setSelectedDate]);
 
   // 切换视图
-  const toggleView = useCallback(() => {
-    setCurrentView(currentView === 'week' ? 'month' : 'week');
+  const toggleView = useCallback(async () => {
+    await setCurrentView(currentView === 'week' ? 'month' : 'week');
   }, [currentView, setCurrentView]);
 
   // 导出数据
@@ -139,10 +145,10 @@ function App() {
       const file = (e.target as HTMLInputElement).files?.[0];
       if (file) {
         const reader = new FileReader();
-        reader.onload = (event) => {
+        reader.onload = async (event) => {
           try {
             const data = event.target?.result as string;
-            importTasks(data);
+            await importTasks(data);
             alert('导入成功！');
           } catch (error) {
             alert('导入失败，请检查文件格式');
@@ -154,75 +160,21 @@ function App() {
     input.click();
   }, [importTasks]);
 
-  // 初始化：加载本地存储的数据 - 暂时禁用
-  /*
-  useEffect(() => {
-    if (hasInitialized) return;
-
-    const savedData = localStorage.getItem('timelineflow-tasks');
-    if (savedData) {
-      try {
-        importTasks(savedData);
-        console.log('Loaded saved tasks');
-      } catch (error) {
-        console.error('Failed to load saved data:', error);
-        localStorage.removeItem('timelineflow-tasks');
-      }
-    }
-
-    setHasInitialized(true);
-  }, [hasInitialized, importTasks]);
-  */
-
-  // 添加示例数据（仅当首次使用时） - 暂时禁用
-  /*
-  useEffect(() => {
-    if (!hasInitialized || tasks.length > 0) return;
-
-    const today = dayjs().startOf('day');
-    const sampleTasks: CreateTaskInput[] = [
-      {
-        title: '项目规划会议',
-        description: '讨论Q1项目目标和里程碑',
-        startTime: today.add(9, 'hour').toDate(),
-        endTime: today.add(10, 'hour').toDate(),
-        priority: 'urgent'
-      },
-      {
-        title: '代码审查',
-        description: '审查PR #123',
-        startTime: today.add(10, 'hour').toDate(),
-        endTime: today.add(11, 'hour').toDate(),
-        priority: 'high'
-      },
-      {
-        title: '团队午餐',
-        startTime: today.add(12, 'hour').toDate(),
-        endTime: today.add(13, 'hour').toDate(),
-        priority: 'low'
-      },
-      {
-        title: '产品需求评审',
-        description: '新功能需求讨论',
-        startTime: today.add(14, 'hour').toDate(),
-        endTime: today.add(16, 'hour').toDate(),
-        priority: 'high'
-      }
-    ];
-
-    sampleTasks.forEach((task) => addTask(task));
-    console.log('Added sample tasks');
-  }, [hasInitialized, tasks.length, addTask]);
-  */
-
-  // 自动保存 - 暂时禁用
-  /*
-  useEffect(() => {
-    if (hasInitialized && tasks.length > 0) {
-      localStorage.setItem('timelineflow-tasks', exportTasks());
-    }
-  }, [tasks, hasInitialized, exportTasks]);
-  */
+  // 等待初始化完成
+  if (!isInitialized) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        fontSize: '18px',
+        color: '#666'
+      }}>
+        加载中...
+      </div>
+    );
+  }
 
   return (
     <ErrorBoundary>
