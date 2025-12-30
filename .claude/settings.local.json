@@ -46,7 +46,8 @@
       "Bash(echo:*)",
       "Bash(awk:*)",
       "Bash(timeout:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(npx tsc:*)"
     ]
   }
 }

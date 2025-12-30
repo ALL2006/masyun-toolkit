@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useTaskStore } from './store/taskStore';
 import { TimelineView } from './components/TimelineView';
 import { TaskDialog } from './components/TaskDialog';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { Task, CreateTaskInput } from './types';
 import dayjs from 'dayjs';
 import './App.css';
@@ -138,49 +139,54 @@ function App() {
     if (savedData) {
       try {
         importTasks(savedData);
+        console.log('Loaded saved tasks');
       } catch (error) {
         console.error('Failed to load saved data:', error);
+        localStorage.removeItem('timelineflow-tasks');
       }
     }
 
-    // 添加一些示例数据（如果是首次使用）
-    if (tasks.length === 0) {
-      const today = dayjs().startOf('day');
-      const sampleTasks: CreateTaskInput[] = [
-        {
-          title: '项目规划会议',
-          description: '讨论Q1项目目标和里程碑',
-          startTime: today.add(9, 'hour').toDate(),
-          endTime: today.add(10, 'hour').toDate(),
-          priority: 'urgent'
-        },
-        {
-          title: '代码审查',
-          description: '审查PR #123',
-          startTime: today.add(10, 'hour').toDate(),
-          endTime: today.add(11, 'hour').toDate(),
-          priority: 'high'
-        },
-        {
-          title: '团队午餐',
-          startTime: today.add(12, 'hour').toDate(),
-          endTime: today.add(13, 'hour').toDate(),
-          priority: 'low'
-        },
-        {
-          title: '产品需求评审',
-          description: '新功能需求讨论',
-          startTime: today.add(14, 'hour').toDate(),
-          endTime: today.add(16, 'hour').toDate(),
-          priority: 'high'
-        }
-      ];
-
-      sampleTasks.forEach((task) => addTask(task));
-    }
-
     setHasInitialized(true);
-  }, [hasInitialized, tasks.length, addTask, importTasks]);
+  }, [hasInitialized, importTasks]);
+
+  // 添加示例数据（仅当首次使用时）
+  useEffect(() => {
+    if (!hasInitialized || tasks.length > 0) return;
+
+    const today = dayjs().startOf('day');
+    const sampleTasks: CreateTaskInput[] = [
+      {
+        title: '项目规划会议',
+        description: '讨论Q1项目目标和里程碑',
+        startTime: today.add(9, 'hour').toDate(),
+        endTime: today.add(10, 'hour').toDate(),
+        priority: 'urgent'
+      },
+      {
+        title: '代码审查',
+        description: '审查PR #123',
+        startTime: today.add(10, 'hour').toDate(),
+        endTime: today.add(11, 'hour').toDate(),
+        priority: 'high'
+      },
+      {
+        title: '团队午餐',
+        startTime: today.add(12, 'hour').toDate(),
+        endTime: today.add(13, 'hour').toDate(),
+        priority: 'low'
+      },
+      {
+        title: '产品需求评审',
+        description: '新功能需求讨论',
+        startTime: today.add(14, 'hour').toDate(),
+        endTime: today.add(16, 'hour').toDate(),
+        priority: 'high'
+      }
+    ];
+
+    sampleTasks.forEach((task) => addTask(task));
+    console.log('Added sample tasks');
+  }, [hasInitialized, tasks.length, addTask]);
 
   // 自动保存
   useEffect(() => {
@@ -190,7 +196,8 @@ function App() {
   }, [tasks, hasInitialized, exportTasks]);
 
   return (
-    <div className="app">
+    <ErrorBoundary>
+      <div className="app">
       {/* 顶部导航栏 */}
       <header className="app-header">
         <div className="header-left">
@@ -303,6 +310,7 @@ function App() {
         </div>
       )}
     </div>
+    </ErrorBoundary>
   );
 }
 
