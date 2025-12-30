@@ -56,7 +56,12 @@
       "Bash(start \"\" \"dist\\\\win-unpacked\\\\待办事项管理.exe\")",
       "Bash(cmd.exe /c \"taskkill /F /PID 7376 /PID 39784 /PID 33044 /PID 78128 2>nul & timeout /t 2 /nobreak >nul & echo Processes killed\")",
       "Bash(curl:*)",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(where:*)",
+      "Bash(npx:*)",
+      "Bash(cmd.exe:*)",
+      "Bash(./gradlew.bat assembleDebug:*)",
+      "Bash(export:*)"
     ]
   }
 }
