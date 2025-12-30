@@ -1,6 +1,6 @@
 {
   "name": "personal-finance-tracker",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "大学生记账本 - UI全面美化升级",
   "author": "Your Name <your.email@example.com>",
   "private": true,
@@ -108,6 +108,7 @@
   },
   "devDependencies": {
     "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
     "electron": "^30.0.0",
     "electron-builder": "^25.1.8",
     "wait-on": "^9.0.3"

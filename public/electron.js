@@ -64,9 +64,6 @@ function createWindow() {
   log.info('__dirname:', __dirname);
   log.info('loadPath:', loadPath);
 
-  // 打开开发者工具
-  mainWindow.webContents.openDevTools();
-
   mainWindow.loadFile(loadPath).then(() => {
     log.info('App loaded successfully');
   }).catch((err) => {
