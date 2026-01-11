@@ -1,0 +1,73 @@
+# Jekyll 配置文件
+# 部署到 Cloudflare Pages 的个人博客
+
+# 站点信息
+title: 郝彬珺的技术空间
+description: AI应用开发 | 全栈技术 | RAG系统 | 微服务架构
+author: 郝彬珺
+email: your-email@example.com
+lang: zh_CN
+
+# 站点 URL
+# 注意：部署到 Cloudflare Pages 后，需要修改为实际的域名
+baseurl: ""
+url: "https://your-domain.pages.dev"
+
+# 社交链接
+github_username: ALL2006
+gitee_username: haobinjun
+
+# Jekyll 配置
+markdown: kramdown
+highlighter: rouge
+permalink: /blog/:year/:month/:day/:title/
+timezone: Asia/Shanghai
+
+# 插件
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# 排除文件
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - .gitignore
+  - README.md
+  - LICENSE
+
+# 前台默认配置
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      author: "郝彬珺"
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "page"
+
+# 分页
+paginate: 10
+paginate_path: "/blog/page/:num/"
+
+# 主题配置
+theme_config:
+  navigation:
+    - title: 首页
+      url: /
+    - title: 博客
+      url: /blog/
+    - title: 项目
+      url: /projects/
+    - title: 关于
+      url: /about/
