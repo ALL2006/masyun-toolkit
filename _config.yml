@@ -28,7 +28,6 @@ plugins:
   - jekyll-feed
   - jekyll-seo-tag
   - jekyll-sitemap
-  - jekyll-paginate
 
 # 排除文件
 exclude:
@@ -56,10 +55,6 @@ defaults:
       type: "pages"
     values:
       layout: "page"
-
-# 分页
-paginate: 10
-paginate_path: "/blog/page/:num/"
 
 # 主题配置
 theme_config:

@@ -62,38 +62,15 @@ title: 博客文章
     margin-right: 0.5rem;
   }
 
-  .pagination {
+  .no-posts {
     text-align: center;
-    margin-top: 3rem;
-  }
-
-  .pagination a, .pagination span {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    margin: 0 0.3rem;
-    border-radius: 5px;
-    text-decoration: none;
-  }
-
-  .pagination a {
-    background: white;
-    color: #667eea;
-    border: 1px solid #e2e8f0;
-  }
-
-  .pagination a:hover {
-    background: #667eea;
-    color: white;
-  }
-
-  .pagination .current {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    color: #a0aec0;
+    padding: 3rem;
   }
 </style>
 
 <div class="blog-list">
-  {% for post in paginator.posts %}
+  {% for post in site.posts %}
   <article class="post-card">
     <a href="{{ post.url }}">
       <h2 class="post-title">{{ post.title }}</h2>
@@ -113,25 +90,9 @@ title: 博客文章
       {% endif %}
     </a>
   </article>
-  {% endfor %}
-
-  <div class="pagination">
-    {% if paginator.previous_page %}
-    <a href="{{ paginator.previous_page_path }}">« 上一页</a>
-    {% endif %}
-
-    {% for page in (1..paginator.total_pages) %}
-    {% if page == paginator.page %}
-    <span class="current">{{ page }}</span>
-    {% elsif page == 1 %}
-    <a href="/blog/">1</a>
-    {% else %}
-    <a href="/blog/page{{ page }}/">{{ page }}</a>
-    {% endif %}
-    {% endfor %}
-
-    {% if paginator.next_page %}
-    <a href="{{ paginator.next_page_path }}">下一页 »</a>
-    {% endif %}
+  {% else %}
+  <div class="no-posts">
+    <p>暂无文章，敬请期待...</p>
   </div>
+  {% endfor %}
 </div>
