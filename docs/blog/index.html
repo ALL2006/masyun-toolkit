@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>技术博客 - 郝彬珺的技术空间</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: #f8f9fa;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        nav {
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+        }
+        .logo {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #3eaf7c;
+            text-decoration: none;
+        }
+        .nav-links a {
+            margin-left: 20px;
+            text-decoration: none;
+            color: #2c3e50;
+        }
+        .nav-links a:hover { color: #3eaf7c; }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .content {
+            padding: 40px 20px;
+        }
+        .blog-section {
+            margin-bottom: 40px;
+        }
+        .blog-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #3eaf7c;
+            padding-bottom: 10px;
+        }
+        .blog-list {
+            list-style: none;
+        }
+        .blog-item {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .blog-item a {
+            text-decoration: none;
+            color: #2c3e50;
+        }
+        .blog-item h3 {
+            color: #3eaf7c;
+            margin-bottom: 8px;
+        }
+        .blog-item p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="/" class="logo">郝彬珺的技术空间</a>
+            <div class="nav-links">
+                <a href="/">首页</a>
+                <a href="/blog/">技术博客</a>
+                <a href="/projects/">项目展示</a>
+                <a href="/about.html">关于我</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="header">
+        <div class="container">
+            <h1>技术博客</h1>
+            <p>分享我的技术学习与实战经验</p>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="container">
+            <div class="blog-section">
+                <h2>🔥 RAG 系列</h2>
+                <ul class="blog-list">
+                    <li class="blog-item">
+                        <a href="RAG系列/reader.html?article=01">
+                            <h3>01 - RAG核心技术原理深度解析</h3>
+                            <p>什么是RAG？为什么需要RAG？RAG vs Fine-tuning，完整工作流程与技术栈全景</p>
+                        </a>
+                    </li>
+                    <li class="blog-item">
+                        <a href="RAG系列/reader.html?article=02">
+                            <h3>02 - 向量数据库深度解析</h3>
+                            <p>向量的数学定义、嵌入模型演进史、相似度计算方法、主流向量数据库对比</p>
+                        </a>
+                    </li>
+                    <li class="blog-item">
+                        <a href="RAG系列/reader.html?article=03">
+                            <h3>03 - 文本切分与检索策略</h3>
+                            <p>文档切分策略、检索优化方法、混合检索与重排序</p>
+                        </a>
+                    </li>
+                    <li class="blog-item">
+                        <a href="RAG系列/reader.html?article=04">
+                            <h3>04 - RAG质量优化实战</h3>
+                            <p>RAG评估体系、常见问题诊断、性能优化策略</p>
+                        </a>
+                    </li>
+                    <li class="blog-item">
+                        <a href="RAG系列/reader.html?article=05">
+                            <h3>05 - 多模态RAG系统</h3>
+                            <p>CLIP模型原理、图文跨模态检索、表格数据RAG、视频音频RAG</p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="blog-section">
+                <h2>☕ Java 全栈</h2>
+                <ul class="blog-list">
+                    <li class="blog-item">
+                        <h3>Java企业级应用开发核心原理</h3>
+                        <p>Spring Boot、微服务架构、分布式系统设计</p>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="blog-section">
+                <h2>🔧 中间件</h2>
+                <ul class="blog-list">
+                    <li class="blog-item">
+                        <h3>Redis分布式锁实现原理</h3>
+                        <p>分布式锁的实现方案与最佳实践</p>
+                    </li>
+                    <li class="blog-item">
+                        <h3>Redis缓存原理与应用</h3>
+                        <p>缓存策略、缓存穿透、缓存击穿、缓存雪崩</p>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="blog-section">
+                <h2>🤖 AI 技术</h2>
+                <ul class="blog-list">
+                    <li class="blog-item">
+                        <h3>AI自进化记</h3>
+                        <p>人工智能技术的发展历程与未来趋势</p>
+                    </li>
+                    <li class="blog-item">
+                        <h3>MCP协议与Agent调用</h3>
+                        <p>Model Context Protocol 详解</p>
+                    </li>
+                    <li class="blog-item">
+                        <h3>多智能体协同架构</h3>
+                        <p>Agent协同工作的架构设计与实现</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>用技术创造价值，用分享传递知识</p>
+        <p style="margin-top: 10px;">Copyright © 2025-present 郝彬珺</p>
+    </div>
+</body>
+</html>

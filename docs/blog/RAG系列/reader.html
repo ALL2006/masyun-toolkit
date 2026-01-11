@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG 系列文章阅读器 - 郝彬珺的技术空间</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.8;
+            color: #2c3e50;
+            background: #f8f9fa;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        nav {
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+        }
+        .logo {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #3eaf7c;
+            text-decoration: none;
+        }
+        .nav-links a {
+            margin-left: 20px;
+            text-decoration: none;
+            color: #2c3e50;
+        }
+        .nav-links a:hover { color: #3eaf7c; }
+        .article-nav {
+            background: white;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .article-nav a {
+            display: inline-block;
+            margin: 5px 15px 5px 0;
+            padding: 8px 15px;
+            background: #f0f0f0;
+            color: #2c3e50;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .article-nav a:hover, .article-nav a.active {
+            background: #3eaf7c;
+            color: white;
+        }
+        #content {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-top: 20px;
+            min-height: 400px;
+        }
+        #content h1, #content h2, #content h3 {
+            color: #2c3e50;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        #content h1 { border-bottom: 2px solid #3eaf7c; padding-bottom: 10px; }
+        #content h2 { border-bottom: 1px solid #eee; padding-bottom: 8px; }
+        #content p {
+            color: #555;
+            margin-bottom: 15px;
+        }
+        #content code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+        #content pre {
+            background: #2d2d2d;
+            color: #ccc;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        #content pre code {
+            background: transparent;
+            color: inherit;
+            padding: 0;
+        }
+        #content ul, #content ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+        #content li {
+            margin-bottom: 8px;
+        }
+        #content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        #content th, #content td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        #content th {
+            background: #3eaf7c;
+            color: white;
+        }
+        #content blockquote {
+            border-left: 4px solid #3eaf7c;
+            padding-left: 20px;
+            margin: 20px 0;
+            color: #666;
+            font-style: italic;
+        }
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="/" class="logo">郝彬珺的技术空间</a>
+            <div class="nav-links">
+                <a href="/">首页</a>
+                <a href="/blog/">技术博客</a>
+                <a href="/projects/">项目展示</a>
+                <a href="/about.html">关于我</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="article-nav">
+            <strong>RAG 系列：</strong>
+            <a href="?article=01">01 - RAG核心技术原理</a>
+            <a href="?article=02">02 - 向量数据库深度解析</a>
+            <a href="?article=03">03 - 文本切分与检索策略</a>
+            <a href="?article=04">04 - RAG质量优化实战</a>
+            <a href="?article=05">05 - 多模态RAG系统</a>
+        </div>
+
+        <div id="content">
+            <p style="text-align: center; color: #999; padding: 100px 0;">
+                正在加载文章...
+            </p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>用技术创造价值，用分享传递知识</p>
+        <p style="margin-top: 10px;">Copyright © 2025-present 郝彬珺</p>
+    </div>
+
+    <script>
+        const articles = {
+            '01': { title: 'RAG核心技术原理深度解析', file: 'RAG核心技术原理.md' },
+            '02': { title: '向量数据库深度解析', file: '向量数据库深度解析.md' },
+            '03': { title: '文本切分与检索策略全指南', file: '文本切分与检索策略.md' },
+            '04': { title: 'RAG质量优化实战', file: 'RAG质量优化实战.md' },
+            '05': { title: '多模态RAG系统', file: '多模态RAG系统.md' }
+        };
+
+        function getArticleId() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('article') || '01';
+        }
+
+        function updateActiveLink() {
+            const articleId = getArticleId();
+            document.querySelectorAll('.article-nav a').forEach(link => {
+                link.classList.remove('active');
+                if (link.href.includes('article=' + articleId)) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        function loadArticle() {
+            const articleId = getArticleId();
+            const article = articles[articleId];
+
+            if (!article) {
+                document.getElementById('content').innerHTML = '<p style="text-align:center;color:#999;padding:100px 0;">文章不存在</p>';
+                return;
+            }
+
+            fetch(article.file)
+                .then(response => {
+                    if (!response.ok) throw new Error('无法加载文章');
+                    return response.text();
+                })
+                .then(markdown => {
+                    document.getElementById('content').innerHTML = marked.parse(markdown);
+                    document.title = article.title + ' - 郝彬珺的技术空间';
+                    updateActiveLink();
+                })
+                .catch(error => {
+                    document.getElementById('content').innerHTML = `
+                        <div style="text-align:center;padding:50px;">
+                            <h3>文章加载失败</h3>
+                            <p style="color:#666;margin-top:15px;">
+                                请确保通过 HTTP 服务器访问此页面（如使用 Gitee Pages）
+                            </p>
+                            <p style="color:#999;margin-top:10px;font-size:0.9rem;">
+                                ${error.message}
+                            </p>
+                        </div>
+                    `;
+                });
+        }
+
+        window.addEventListener('DOMContentLoaded', loadArticle);
+    </script>
+</body>
+</html>

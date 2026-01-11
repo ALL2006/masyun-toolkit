@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我 - 郝彬珺的技术空间</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.8;
+            color: #2c3e50;
+            background: #f8f9fa;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        nav {
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+        }
+        .logo {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #3eaf7c;
+            text-decoration: none;
+        }
+        .nav-links a {
+            margin-left: 20px;
+            text-decoration: none;
+            color: #2c3e50;
+        }
+        .nav-links a:hover { color: #3eaf7c; }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px 20px;
+            text-align: center;
+        }
+        .header h1 { font-size: 2.2rem; margin-bottom: 10px; }
+        .content {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-top: -30px;
+            margin-bottom: 40px;
+        }
+        .content h2 {
+            color: #3eaf7c;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+        .content h3 {
+            color: #2c3e50;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .content p {
+            color: #555;
+            margin-bottom: 15px;
+        }
+        .tech-list {
+            list-style: none;
+            padding: 0;
+        }
+        .tech-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .tech-list li:before {
+            content: "▸ ";
+            color: #3eaf7c;
+            font-weight: bold;
+        }
+        .project-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .contact-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 30px;
+        }
+        .contact-box a {
+            color: white;
+            text-decoration: underline;
+        }
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+        }
+        .quote {
+            font-style: italic;
+            color: #666;
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-left: 4px solid #3eaf7c;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="/" class="logo">郝彬珺的技术空间</a>
+            <div class="nav-links">
+                <a href="/">首页</a>
+                <a href="/blog/">技术博客</a>
+                <a href="/projects/">项目展示</a>
+                <a href="/about.html">关于我</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="header">
+        <div class="container">
+            <h1>关于我</h1>
+            <p>AI应用开发 | 全栈技术 | RAG系统</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="content">
+            <h2>👋 个人简介</h2>
+            <p>你好！我是<strong>郝彬珺</strong>，一名专注于 <strong>AI应用开发</strong> 和 <strong>全栈技术</strong> 的开发者。</p>
+            <p>我热衷于探索前沿技术，特别是 RAG 检索增强生成系统、多模态 AI 应用、微服务架构设计、跨平台应用开发等领域。</p>
+
+            <h2>💻 技术栈</h2>
+
+            <h3>后端开发</h3>
+            <ul class="tech-list">
+                <li><strong>Java</strong>: Spring Boot, 微服务架构</li>
+                <li><strong>Python</strong>: FastAPI, AI/ML 开发</li>
+                <li><strong>Node.js</strong>: 全栈开发</li>
+            </ul>
+
+            <h3>前端开发</h3>
+            <ul class="tech-list">
+                <li><strong>框架</strong>: Vue.js, React</li>
+                <li><strong>跨平台</strong>: Capacitor, Electron</li>
+            </ul>
+
+            <h3>AI/ML</h3>
+            <ul class="tech-list">
+                <li><strong>LLM</strong>: RAG 系统, Prompt 工程</li>
+                <li><strong>多模态</strong>: CLIP, Whisper</li>
+                <li><strong>Agent</strong>: MCP 协议, 多智能体协同</li>
+            </ul>
+
+            <h3>数据库/中间件</h3>
+            <ul class="tech-list">
+                <li><strong>数据库</strong>: MySQL, PostgreSQL, Redis, ChromaDB</li>
+                <li><strong>消息队列</strong>: RabbitMQ</li>
+                <li><strong>搜索</strong>: Elasticsearch</li>
+            </ul>
+
+            <h2>🚀 项目经验</h2>
+
+            <div class="project-box">
+                <h3>masyun-toolkit</h3>
+                <p>AI 编程项目分享工具，用于学习和使用。基于 Capacitor 开发的跨平台应用，支持 Web 和 Android 平台，具有 AI 辅助编程功能，开源 MIT 协议。</p>
+            </div>
+
+            <div class="project-box">
+                <h3>fengshui-ai</h3>
+                <p>风水 AI 分析系统，结合传统风水知识与现代 AI 技术，提供智能化分析和可视化展示。</p>
+            </div>
+
+            <div class="project-box">
+                <h3>shanxi-tourism-agent</h3>
+                <p>山西旅游智能 Agent，基于 React + FastAPI 前后端分离架构，提供 AI 智能推荐和旅游规划服务。</p>
+            </div>
+
+            <div class="project-box">
+                <h3>todo-management-platform</h3>
+                <p>跨平台待办管理应用，支持本地数据持久化，简洁易用的用户界面。</p>
+            </div>
+
+            <h2>🏆 比赛经历</h2>
+            <ul class="tech-list">
+                <li>三创AI电商实战赛</li>
+                <li>梧桐杯创新大赛</li>
+            </ul>
+
+            <div class="quote">
+                "用技术创造价值，用分享传递知识"
+            </div>
+
+            <div class="contact-box">
+                <h3>📬 联系方式</h3>
+                <p style="margin-top: 15px;">
+                    欢迎与我交流技术和项目合作！
+                </p>
+                <p style="margin-top: 15px;">
+                    <a href="https://gitee.com/haobinjun" target="_blank">Gitee: haobinjun</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>用技术创造价值，用分享传递知识</p>
+        <p style="margin-top: 10px;">Copyright © 2025-present 郝彬珺</p>
+    </div>
+</body>
+</html>

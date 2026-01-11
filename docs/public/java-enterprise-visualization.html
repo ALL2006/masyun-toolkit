@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java企业级开发原理 - 可视化讲解工具</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #1e1e1e;
+            --bg-secondary: #252526;
+            --bg-tertiary: #2d2d30;
+            --bg-active: #37373d;
+            --text-primary: #cccccc;
+            --text-secondary: #858585;
+            --text-accent: #4ec9b0;
+            --text-keyword: #569cd6;
+            --text-string: #ce9178;
+            --text-comment: #6a9955;
+            --border-color: #3c3c3c;
+            --border-focus: #007acc;
+            --color-layer-controller: #dcdcaa;
+            --color-layer-service: #4ec9b0;
+            --color-layer-dao: #569cd6;
+            --color-flow: #f44747;
+            --color-spring: #6a9955;
+            --color-aop: #c586c0;
+            --color-orm: #ce9178;
+            --color-micro: #f44747;
+            --font-mono: 'Fira Code', 'Monaco', 'Consolas', monospace;
+            --font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-ui);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-header {
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .app-title {
+            font-family: var(--font-mono);
+            font-size: 20px;
+            color: var(--text-accent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .icon-bracket {
+            color: var(--text-keyword);
+            font-size: 24px;
+        }
+
+        .module-indicator {
+            font-family: var(--font-mono);
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .module-indicator span {
+            color: var(--text-keyword);
+        }
+
+        .app-container {
+            display: flex;
+            flex: 1;
+            min-height: 0;
+        }
+
+        .nav-panel {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 16px 0;
+        }
+
+        .nav-header {
+            padding: 0 20px 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-title {
+            font-family: var(--font-mono);
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-list {
+            list-style: none;
+            margin-top: 12px;
+        }
+
+        .nav-item {
+            padding: 16px 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-active);
+        }
+
+        .nav-item.active {
+            background: var(--bg-active);
+            border-left-color: var(--border-focus);
+        }
+
+        .nav-icon {
+            font-size: 24px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+        }
+
+        .nav-label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .nav-subtitle {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-family: var(--font-mono);
+        }
+
+        .main-stage {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .module-stage {
+            display: none;
+            flex: 1;
+            flex-direction: column;
+            min-height: 400px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .module-stage.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stage-header {
+            padding: 24px 32px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .stage-header h2 {
+            font-family: var(--font-mono);
+            font-size: 24px;
+            color: var(--text-accent);
+            margin-bottom: 8px;
+        }
+
+        .stage-description {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .canvas-container {
+            flex: 1;
+            min-height: 450px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .animation-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .code-explanation {
+            position: absolute;
+            bottom: 80px;
+            right: 32px;
+            width: 400px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            font-family: var(--font-mono);
+            font-size: 13px;
+            line-height: 1.8;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            opacity: 0;
+            transform: translateX(20px);
+            transition: all 0.3s ease;
+        }
+
+        .code-explanation.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .code-explanation .comment {
+            color: var(--text-comment);
+        }
+
+        .code-explanation .keyword {
+            color: var(--text-keyword);
+        }
+
+        .code-explanation .string {
+            color: var(--text-string);
+        }
+
+        .control-panel {
+            background: var(--bg-tertiary);
+            border-top: 1px solid var(--border-color);
+            padding: 16px 32px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .control-btn {
+            background: var(--bg-active);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: var(--font-mono);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .control-btn:hover {
+            background: var(--bg-secondary);
+            border-color: var(--border-focus);
+        }
+
+        .control-btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-icon {
+            font-size: 12px;
+        }
+
+        .progress-indicator {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .progress-text {
+            font-family: var(--font-mono);
+            font-size: 14px;
+            color: var(--text-secondary);
+            min-width: 80px;
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 6px;
+            background: var(--bg-primary);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--border-focus), var(--text-accent));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .svg-text {
+            font-family: var(--font-mono);
+            fill: var(--text-primary);
+        }
+
+        .svg-text-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .svg-text-code {
+            font-size: 12px;
+            fill: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <header class="app-header">
+        <div class="header-content">
+            <h1 class="app-title">
+                <span class="icon-bracket">&lt;</span>
+                Java企业级开发原理
+                <span class="icon-bracket">/&gt;</span>
+            </h1>
+            <div class="module-indicator">
+                当前模块: <span id="currentModule">架构分层</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="app-container">
+        <nav class="nav-panel">
+            <div class="nav-header">
+                <span class="nav-title">讲解模块</span>
+            </div>
+            <ul class="nav-list">
+                <li class="nav-item active" data-module="architecture">
+                    <div class="nav-icon"></div>
+                    <div class="nav-text">
+                        <span class="nav-label">架构分层</span>
+                        <span class="nav-subtitle">MVC + 数据流</span>
+                    </div>
+                </li>
+                <li class="nav-item" data-module="spring">
+                    <div class="nav-icon"></div>
+                    <div class="nav-text">
+                        <span class="nav-label">Spring核心</span>
+                        <span class="nav-subtitle">IoC + AOP</span>
+                    </div>
+                </li>
+                <li class="nav-item" data-module="persistence">
+                    <div class="nav-icon"></div>
+                    <div class="nav-text">
+                        <span class="nav-label">数据持久化</span>
+                        <span class="nav-subtitle">ORM + 事务</span>
+                    </div>
+                </li>
+                <li class="nav-item" data-module="microservice">
+                    <div class="nav-icon"></div>
+                    <div class="nav-text">
+                        <span class="nav-label">高并发微服务</span>
+                        <span class="nav-subtitle">线程池 + 服务拆分</span>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="main-stage">
+            <section id="module-architecture" class="module-stage active">
+                <div class="stage-header">
+                    <h2>MVC三层架构与数据流向</h2>
+                    <div class="stage-description">
+                        <p>点击下方按钮逐步演示请求在三层架构中的流转过程</p>
+                    </div>
+                </div>
+                <div class="canvas-container">
+                    <svg id="svg-architecture" class="animation-canvas" viewBox="0 0 1000 600"></svg>
+                    <div class="code-explanation" id="code-architecture"></div>
+                </div>
+            </section>
+
+            <section id="module-spring" class="module-stage">
+                <div class="stage-header">
+                    <h2>Spring IoC容器与AOP切面编程</h2>
+                    <div class="stage-description">
+                        <p>演示依赖注入的创建过程和AOP切面的代理机制</p>
+                    </div>
+                </div>
+                <div class="canvas-container">
+                    <svg id="svg-spring" class="animation-canvas" viewBox="0 0 1000 600"></svg>
+                    <div class="code-explanation" id="code-spring"></div>
+                </div>
+            </section>
+
+            <section id="module-persistence" class="module-stage">
+                <div class="stage-header">
+                    <h2>ORM映射与事务管理</h2>
+                    <div class="stage-description">
+                        <p>展示对象关系映射和ACID事务特性</p>
+                    </div>
+                </div>
+                <div class="canvas-container">
+                    <svg id="svg-persistence" class="animation-canvas" viewBox="0 0 1000 600"></svg>
+                    <div class="code-explanation" id="code-persistence"></div>
+                </div>
+            </section>
+
+            <section id="module-microservice" class="module-stage">
+                <div class="stage-header">
+                    <h2>高并发与微服务架构</h2>
+                    <div class="stage-description">
+                        <p>演示线程池工作原理和服务拆分策略</p>
+                    </div>
+                </div>
+                <div class="canvas-container">
+                    <svg id="svg-microservice" class="animation-canvas" viewBox="0 0 1000 600"></svg>
+                    <div class="code-explanation" id="code-microservice"></div>
+                </div>
+            </section>
+
+            <div class="control-panel">
+                <button class="control-btn btn-prev" id="btnPrev">
+                    <span class="btn-icon"></span>
+                    上一步
+                </button>
+                <button class="control-btn btn-play" id="btnPlay">
+                    <span class="btn-icon"></span>
+                    <span class="btn-text">演示</span>
+                </button>
+                <button class="control-btn btn-next" id="btnNext">
+                    下一步
+                    <span class="btn-icon"></span>
+                </button>
+                <button class="control-btn btn-reset" id="btnReset">
+                    <span class="btn-icon"></span>
+                    重置
+                </button>
+                <div class="progress-indicator">
+                    <span class="progress-text">步骤: <span id="stepCounter">0</span>/<span id="totalSteps">5</span></span>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // ============ 配置和状态管理 ============
+        const ModuleConfig = {
+            architecture: {
+                name: '架构分层',
+                icon: '',
+                steps: ['显示架构', '请求到达', 'Controller处理', 'Service处理', 'DAO访问', '返回响应']
+            },
+            spring: {
+                name: 'Spring核心',
+                icon: '',
+                steps: ['容器初始化', 'Bean扫描', '依赖注入', 'AOP代理', '方法调用']
+            },
+            persistence: {
+                name: '数据持久化',
+                icon: '',
+                steps: ['对象与表', 'ORM映射', '数据传输', 'SQL生成', '事务管理', 'ACID特性']
+            },
+            microservice: {
+                name: '高并发微服务',
+                icon: '',
+                steps: ['请求到达', '线程池处理', '微服务调用', '数据库访问', '响应返回']
+            }
+        };
+
+        class AnimationController {
+            constructor() {
+                this.timelines = {};
+                this.currentModule = 'architecture';
+                this.currentStep = 0;
+                this.init();
+            }
+
+            init() {
+                this.bindEvents();
+                this.initAllModules();
+                this.switchModule('architecture');
+                this.updateNavIcons();
+            }
+
+            updateNavIcons() {
+                const icons = ['', '', '', ''];
+                document.querySelectorAll('.nav-icon').forEach((el, i) => {
+                    el.textContent = icons[i];
+                });
+            }
+
+            bindEvents() {
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        const module = e.currentTarget.dataset.module;
+                        this.switchModule(module);
+                    });
+                });
+
+                document.getElementById('btnPrev').addEventListener('click', () => this.prevStep());
+                document.getElementById('btnNext').addEventListener('click', () => this.nextStep());
+                document.getElementById('btnPlay').addEventListener('click', () => this.playAnimation());
+                document.getElementById('btnReset').addEventListener('click', () => this.reset());
+
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowLeft') this.prevStep();
+                    if (e.key === 'ArrowRight' || e.key === ' ') {
+                        e.preventDefault();
+                        this.nextStep();
+                    }
+                    if (e.key === 'r' || e.key === 'R') this.reset();
+                });
+            }
+
+            switchModule(moduleName) {
+                this.reset();
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.classList.toggle('active', item.dataset.module === moduleName);
+                });
+                document.querySelectorAll('.module-stage').forEach(stage => {
+                    stage.classList.toggle('active', stage.id === `module-${moduleName}`);
+                });
+                document.getElementById('currentModule').textContent = ModuleConfig[moduleName].name;
+                this.currentModule = moduleName;
+                this.currentStep = 0;
+                this.updateProgress();
+                this.initModule(moduleName);
+            }
+
+            initAllModules() {
+                this.initArchitecture();
+                this.initSpring();
+                this.initPersistence();
+                this.initMicroservice();
+            }
+
+            initModule(moduleName) {
+                const initMethods = {
+                    architecture: 'initArchitecture',
+                    spring: 'initSpring',
+                    persistence: 'initPersistence',
+                    microservice: 'initMicroservice'
+                };
+                if (this[initMethods[moduleName]]) {
+                    this[initMethods[moduleName]]();
+                }
+            }
+
+            nextStep() {
+                const maxSteps = ModuleConfig[this.currentModule].steps.length - 1;
+                if (this.currentStep < maxSteps) {
+                    this.currentStep++;
+                    this.playStep(this.currentStep);
+                    this.updateProgress();
+                }
+            }
+
+            prevStep() {
+                if (this.currentStep > 0) {
+                    this.currentStep--;
+                    this.playStep(this.currentStep);
+                    this.updateProgress();
+                }
+            }
+
+            playAnimation() {
+                const maxSteps = ModuleConfig[this.currentModule].steps.length - 1;
+                if (this.currentStep < maxSteps) {
+                    this.nextStep();
+                }
+            }
+
+            reset() {
+                if (this.timelines[this.currentModule]) {
+                    this.timelines[this.currentModule].progress(0);
+                    this.timelines[this.currentModule].pause();
+                }
+                this.currentStep = 0;
+                this.updateProgress();
+                this.hideCodeExplanation();
+            }
+
+            updateProgress() {
+                const total = ModuleConfig[this.currentModule].steps.length;
+                const progress = (this.currentStep / (total - 1)) * 100;
+                document.getElementById('stepCounter').textContent = this.currentStep;
+                document.getElementById('totalSteps').textContent = total - 1;
+                document.getElementById('progressFill').style.width = `${progress}%`;
+            }
+
+            showCodeExplanation(html) {
+                const el = document.getElementById(`code-${this.currentModule}`);
+                el.innerHTML = html;
+                el.classList.add('visible');
+            }
+
+            hideCodeExplanation() {
+                document.querySelectorAll('.code-explanation').forEach(el => {
+                    el.classList.remove('visible');
+                });
+            }
+
+            playStep(step) {
+                const timeline = this.timelines[this.currentModule];
+                if (timeline) {
+                    timeline.tweenFromTo(step - 1, step);
+                }
+                this.showStepCode(step);
+            }
+
+            showStepCode(step) {
+                const codeMap = this.getCodeMap();
+                const code = codeMap[this.currentModule]?.[step];
+                if (code) {
+                    this.showCodeExplanation(code);
+                }
+            }
+
+            getCodeMap() {
+                return {
+                    architecture: {
+                        0: `<span class="comment">// MVC三层架构</span>
+<span class="keyword">Controller</span>  &rarr;  <span class="keyword">Service</span>  &rarr;  <span class="keyword">DAO</span>
+
+<span class="comment">// 接收HTTP请求，参数校验</span>
+<span class="comment">// 处理业务逻辑，事务管理</span>
+<span class="comment">// 执行SQL，结果映射</span>`,
+                        1: `<span class="comment">// 1. 客户端发起HTTP请求</span>
+<span class="keyword">GET</span> <span class="string">/api/users/123</span>
+
+<span class="comment">// 请求经过网关到达服务器</span>`,
+                        2: `<span class="comment">// 2. Controller层处理</span>
+<span class="keyword">@RestController</span>
+<span class="keyword">@RequestMapping</span>(<span class="string">"/api/users"</span>)
+<span class="keyword">public class</span> UserController {
+
+    <span class="keyword">public</span> User getUser(<span class="keyword">long</span> id) {
+        <span class="comment">// 参数校验</span>
+        <span class="keyword">return</span> userService.findById(id);
+    }
+}`,
+                        3: `<span class="comment">// 3. Service层业务逻辑</span>
+<span class="keyword">@Service</span>
+<span class="keyword">public class</span> UserService {
+
+    <span class="keyword">public</span> User findById(<span class="keyword">long</span> id) {
+        <span class="comment">// 缓存查询</span>
+        <span class="comment">// 权限校验</span>
+        <span class="keyword">return</span> userDao.findById(id);
+    }
+}`,
+                        4: `<span class="comment">// 4. DAO层数据访问</span>
+<span class="keyword">@Repository</span>
+<span class="keyword">public interface</span> UserDao {
+
+    <span class="comment">// ORM自动生成SQL</span>
+    User findById(<span class="keyword">long</span> id);
+}`,
+                        5: `<span class="comment">// 5. 返回JSON响应</span>
+{
+    <span class="string">"code"</span>: 200,
+    <span class="string">"data"</span>: {
+        <span class="string">"id"</span>: 123,
+        <span class="string">"name"</span>: <span class="string">"张三"</span>,
+        <span class="string">"email"</span>: <span class="string">"zhang@example.com"</span>
+    }
+}`
+                    },
+                    spring: {
+                        0: `<span class="comment">// Spring容器启动</span>
+<span class="keyword">ApplicationContext</span> context =
+    <span class="keyword">new</span> AnnotationConfigApplicationContext(
+        AppConfig.<span class="keyword">class</span>
+    );
+
+<span class="comment">// 容器管理所有Bean的生命周期</span>`,
+                        1: `<span class="comment">// Bean定义扫描</span>
+<span class="keyword">@ComponentScan</span>(<span class="string">"com.example"</span>)
+<span class="keyword">public class</span> AppConfig {
+
+}
+
+<span class="comment">// 发现并注册:</span>
+<span class="comment">// - @Controller</span>
+<span class="comment">// - @Service</span>
+<span class="comment">// - @Repository</span>`,
+                        2: `<span class="comment">// 依赖注入</span>
+<span class="keyword">@Service</span>
+<span class="keyword">public class</span> UserService {
+
+    <span class="keyword">@Autowired</span>
+    <span class="keyword">private</span> UserDao userDao;
+
+    <span class="comment">// 容器自动注入依赖</span>
+}`,
+                        3: `<span class="comment">// AOP动态代理</span>
+<span class="keyword">@Aspect</span>
+<span class="keyword">@Component</span>
+<span class="keyword">public class</span> LoggingAspect {
+
+    <span class="keyword">@Around</span>(<span class="string">"@annotation(Loggable)"</span>)
+    <span class="keyword">public Object</span> log(ProceedingJoinPoint pjp) {
+        <span class="comment">// 前置: 记录日志</span>
+        <span class="keyword">Object</span> result = pjp.proceed();
+        <span class="comment">// 后置: 记录返回值</span>
+        <span class="keyword">return</span> result;
+    }
+}`,
+                        4: `<span class="comment">// 方法调用链</span>
+客户端请求
+  &rarr; 代理对象[前置通知]
+    &rarr; 目标对象[UserService]
+  &rarr; 代理对象[后置通知]
+    &rarr; 返回响应`
+                    },
+                    persistence: {
+                        0: `<span class="comment">// Java实体类</span>
+<span class="keyword">@Entity</span>
+<span class="keyword">@Table</span>(name = <span class="string">"users"</span>)
+<span class="keyword">public class</span> User {
+    <span class="keyword">@Id</span>
+    <span class="keyword">private</span> <span class="keyword">long</span> id;
+    <span class="keyword">private</span> <span class="keyword">String</span> name;
+    <span class="keyword">private</span> <span class="keyword">String</span> email;
+}`,
+                        1: `<span class="comment">// ORM映射关系</span>
+Java对象         数据库表
+─────────────────────────────
+User.class   &harr;   users 表
+id: Long     &harr;   id BIGINT
+name: String &harr;   username VARCHAR
+email:String &harr;   email VARCHAR`,
+                        2: `<span class="comment">// JPA自动生成SQL</span>
+userRepository.findById(123L);
+
+<span class="comment">// 自动生成:</span>
+<span class="keyword">SELECT</span> * <span class="keyword">FROM</span> users
+<span class="keyword">WHERE</span> id = 123;`,
+                        3: `<span class="comment">// 事务管理</span>
+<span class="keyword">@Transactional</span>
+<span class="keyword">public void</span> transfer(
+    <span class="keyword">long</span> from, <span class="keyword">long</span> to,
+    <span class="keyword">double</span> amount
+) {
+    accountDao.decrease(from, amount);
+    accountDao.increase(to, amount);
+    <span class="comment">// ACID保证原子性</span>
+}`,
+                        4: `<span class="comment">// ACID事务特性</span>
+<span class="keyword">A</span> - Atomicity   原子性
+<span class="keyword">C</span> - Consistency 一致性
+<span class="keyword">I</span> - Isolation   隔离性
+<span class="keyword">D</span> - Durability  持久性
+
+<span class="comment">// 要么全部成功，要么全部回滚</span>`,
+                        5: `<span class="comment">// 事务传播级别</span>
+<span class="keyword">@Transactional</span>(propagation = Propagation.REQUIRED)
+
+<span class="comment">// 隔离级别</span>
+<span class="keyword">@Transactional</span>(
+    isolation = Isolation.READ_COMMITTED
+)
+
+<span class="comment">// 防止: 脏读、不可重复读、幻读</span>`
+                    },
+                    microservice: {
+                        0: `<span class="comment">// API网关入口</span>
+<span class="keyword">GET</span> <span class="string">/api/orders/123</span>
+      &darr;
+<span class="comment">// 路由、限流、认证</span>
+API Gateway`,
+                        1: `<span class="comment">// 线程池处理</span>
+<span class="keyword">ExecutorService</span> pool =
+    Executors.newFixedThreadPool(50);
+
+<span class="comment">// 工作队列</span>
+[Thread-1] [Thread-2] ... [Thread-50]
+     &darr;          &darr;
+   任务1      任务2`,
+                        2: `<span class="comment">// 微服务拆分</span>
+订单服务 &harr; 用户服务
+   &darr;         &darr;
+商品服务 &harr; 支付服务
+   &darr;         &darr;
+库存服务 &harr; 物流服务`,
+                        3: `<span class="comment">// 服务间调用</span>
+<span class="comment">// 使用Feign/OpenFeign</span>
+<span class="keyword">@FeignClient</span>(name = <span class="string">"user-service"</span>)
+<span class="keyword">public interface</span> UserClient {
+    <span class="keyword">User</span> getUser(<span class="keyword">long</span> id);
+}`,
+                        4: `<span class="comment">// 并行处理聚合结果</span>
+CompletableFuture&lt;User&gt; user =
+    asyncUserService.get(id);
+CompletableFuture&lt;List&lt;Order&gt;&gt; orders =
+    asyncOrderService.getByUser(id);
+
+<span class="comment">// 等待所有完成</span>
+CompletableFuture.allOf(user, orders)
+    .join();`
+                    }
+                };
+            }
+
+            // ============ 模块1: 架构分层 ============
+            initArchitecture() {
+                const svg = document.getElementById('svg-architecture');
+                const ns = 'http://www.w3.org/2000/svg';
+                svg.innerHTML = '';
+
+                const defs = document.createElementNS(ns, 'defs');
+                defs.innerHTML = `
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#f44747"/>
+                    </marker>
+                    <filter id="glow">
+                        <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                        <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                    </filter>
+                `;
+                svg.appendChild(defs);
+
+                const layers = [
+                    { name: 'Controller', y: 150, color: 'var(--color-layer-controller)', items: ['@RestController', '接收请求', '参数校验', '路由分发'] },
+                    { name: 'Service', y: 280, color: 'var(--color-layer-service)', items: ['@Service', '业务逻辑', '事务管理', '权限校验'] },
+                    { name: 'DAO', y: 410, color: 'var(--color-layer-dao)', items: ['@Repository', 'SQL执行', 'ORM映射', '连接池'] }
+                ];
+
+                layers.forEach(layer => {
+                    const g = document.createElementNS(ns, 'g');
+                    g.classList.add('layer-group');
+                    g.id = `layer-${layer.name.toLowerCase()}`;
+
+                    const rect = document.createElementNS(ns, 'rect');
+                    rect.setAttribute('x', 350);
+                    rect.setAttribute('y', layer.y);
+                    rect.setAttribute('width', 300);
+                    rect.setAttribute('height', 90);
+                    rect.setAttribute('rx', 8);
+                    rect.setAttribute('fill', 'var(--bg-secondary)');
+                    rect.setAttribute('stroke', layer.color);
+                    rect.setAttribute('stroke-width', '2');
+                    rect.style.opacity = '0';
+                    rect.classList.add('layer-rect');
+
+                    const text = document.createElementNS(ns, 'text');
+                    text.setAttribute('x', 500);
+                    text.setAttribute('y', layer.y + 35);
+                    text.setAttribute('text-anchor', 'middle');
+                    text.classList.add('svg-text', 'svg-text-title');
+                    text.textContent = layer.name;
+                    text.style.fill = layer.color;
+                    text.style.opacity = '0';
+
+                    layer.items.forEach((item, i) => {
+                        const itemText = document.createElementNS(ns, 'text');
+                        itemText.setAttribute('x', 370 + (i % 2) * 140);
+                        itemText.setAttribute('y', layer.y + 60 + Math.floor(i / 2) * 20);
+                        itemText.classList.add('svg-text', 'svg-text-code');
+                        itemText.textContent = item;
+                        itemText.style.opacity = '0';
+                        itemText.classList.add(`item-${layer.name.toLowerCase()}-${i}`);
+                        itemText.style.fill = layer.color;
+                        g.appendChild(itemText);
+                    });
+
+                    g.appendChild(rect);
+                    g.appendChild(text);
+                    svg.appendChild(g);
+                });
+
+                const arrows = [
+                    { x1: 500, y1: 240, x2: 500, y2: 280, id: 'arrow-1-2' },
+                    { x1: 500, y1: 370, x2: 500, y2: 410, id: 'arrow-2-3' }
+                ];
+
+                arrows.forEach(arrow => {
+                    const line = document.createElementNS(ns, 'line');
+                    line.setAttribute('x1', arrow.x1);
+                    line.setAttribute('y1', arrow.y1);
+                    line.setAttribute('x2', arrow.x2);
+                    line.setAttribute('y2', arrow.y2);
+                    line.setAttribute('stroke', 'var(--color-flow)');
+                    line.setAttribute('stroke-width', '3');
+                    line.setAttribute('marker-end', 'url(#arrowhead)');
+                    line.setAttribute('stroke-dasharray', '10,5');
+                    line.style.opacity = '0';
+                    line.id = arrow.id;
+                    svg.appendChild(line);
+                });
+
+                const clientGroup = document.createElementNS(ns, 'g');
+                clientGroup.id = 'client-icon';
+                clientGroup.style.opacity = '0';
+
+                const clientRect = document.createElementNS(ns, 'rect');
+                clientRect.setAttribute('x', 80);
+                clientRect.setAttribute('y', 260);
+                clientRect.setAttribute('width', 100);
+                clientRect.setAttribute('height', 50);
+                clientRect.setAttribute('rx', 8);
+                clientRect.setAttribute('fill', 'var(--bg-secondary)');
+                clientRect.setAttribute('stroke', 'var(--text-secondary)');
+
+                const clientText = document.createElementNS(ns, 'text');
+                clientText.setAttribute('x', 130);
+                clientText.setAttribute('y', 290);
+                clientText.setAttribute('text-anchor', 'middle');
+                clientText.classList.add('svg-text');
+                clientText.textContent = '客户端';
+
+                clientGroup.appendChild(clientRect);
+                clientGroup.appendChild(clientText);
+                svg.appendChild(clientGroup);
+
+                const dbGroup = document.createElementNS(ns, 'g');
+                dbGroup.id = 'db-icon';
+                dbGroup.style.opacity = '0';
+
+                const dbTop = document.createElementNS(ns, 'ellipse');
+                dbTop.setAttribute('cx', 850);
+                dbTop.setAttribute('cy', 435);
+                dbTop.setAttribute('rx', 50);
+                dbTop.setAttribute('ry', 15);
+                dbTop.setAttribute('fill', 'var(--bg-secondary)');
+                dbTop.setAttribute('stroke', 'var(--color-layer-dao)');
+
+                const dbBody = document.createElementNS(ns, 'rect');
+                dbBody.setAttribute('x', 800);
+                dbBody.setAttribute('y', 435);
+                dbBody.setAttribute('width', 100);
+                dbBody.setAttribute('height', 40);
+                dbBody.setAttribute('fill', 'var(--bg-secondary)');
+                dbBody.setAttribute('stroke', 'var(--color-layer-dao)');
+
+                const dbBottom = document.createElementNS(ns, 'ellipse');
+                dbBottom.setAttribute('cx', 850);
+                dbBottom.setAttribute('cy', 475);
+                dbBottom.setAttribute('rx', 50);
+                dbBottom.setAttribute('ry', 15);
+                dbBottom.setAttribute('fill', 'var(--bg-secondary)');
+                dbBottom.setAttribute('stroke', 'var(--color-layer-dao)');
+
+                const dbText = document.createElementNS(ns, 'text');
+                dbText.setAttribute('x', 850);
+                dbText.setAttribute('y', 500);
+                dbText.setAttribute('text-anchor', 'middle');
+                dbText.classList.add('svg-text', 'svg-text-code');
+                dbText.textContent = 'Database';
+
+                dbGroup.appendChild(dbTop);
+                dbGroup.appendChild(dbBody);
+                dbGroup.appendChild(dbBottom);
+                dbGroup.appendChild(dbText);
+                svg.appendChild(dbGroup);
+
+                const packet = document.createElementNS(ns, 'circle');
+                packet.setAttribute('cx', 180);
+                packet.setAttribute('cy', 285);
+                packet.setAttribute('r', 10);
+                packet.setAttribute('fill', 'var(--color-flow)');
+                packet.setAttribute('filter', 'url(#glow)');
+                packet.id = 'data-packet';
+                packet.style.opacity = '0';
+                svg.appendChild(packet);
+
+                this.createArchitectureTimeline();
+            }
+
+            createArchitectureTimeline() {
+                const tl = gsap.timeline({ paused: true });
+
+                tl.to('.layer-rect', { opacity: 1, duration: 0.5, stagger: 0.15 }, 0)
+                  .to('.layer-group .svg-text-title', { opacity: 1, duration: 0.5, stagger: 0.15 }, 0)
+                  .to('#client-icon', { opacity: 1, duration: 0.5 }, 0.5)
+                  .to('#db-icon', { opacity: 1, duration: 0.5 }, 0.5)
+                  .to('#data-packet', { opacity: 1, duration: 0.3 }, 1)
+                  .to('#data-packet', { cx: 350, duration: 0.8, ease: 'power2.out' }, 1.3)
+                  .to('.layer-rect', { strokeWidth: 4, duration: 0.2 }, 2.1)
+                  .to('.item-controller-0, .item-controller-1', { opacity: 1, duration: 0.2, stagger: 0.1 }, 2.1)
+                  .to('#data-packet', { cx: 500, cy: 240, duration: 0.6, ease: 'power2.inOut' }, 2.3)
+                  .to('#arrow-1-2', { opacity: 1, duration: 0.3 }, 2.5)
+                  .to('.layer-rect', { strokeWidth: 2, duration: 0.2 }, 2.9)
+                  .to('.item-service-0, .item-service-1', { opacity: 1, duration: 0.2, stagger: 0.1 }, 2.9)
+                  .to('#data-packet', { cx: 500, cy: 370, duration: 0.6, ease: 'power2.inOut' }, 3.1)
+                  .to('#arrow-2-3', { opacity: 1, duration: 0.3 }, 3.3)
+                  .to('.item-dao-0, .item-dao-1', { opacity: 1, duration: 0.2, stagger: 0.1 }, 3.5)
+                  .to('#data-packet', { cx: 800, duration: 0.6, ease: 'power2.out' }, 3.7)
+                  .to('#data-packet', { fill: 'var(--text-accent)', duration: 0.3 }, 4.3)
+                  .to('#data-packet', { cx: 130, cy: 285, duration: 1, ease: 'power2.inOut' }, 4.6);
+
+                this.timelines.architecture = tl;
+            }
+
+            // ============ 模块2: Spring核心 ============
+            initSpring() {
+                const svg = document.getElementById('svg-spring');
+                const ns = 'http://www.w3.org/2000/svg';
+                svg.innerHTML = '';
+
+                const defs = document.createElementNS(ns, 'defs');
+                defs.innerHTML = `
+                    <marker id="arrowhead2" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#6a9955"/>
+                    </marker>
+                    <linearGradient id="containerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#6a9955;stop-opacity:0.1" />
+                        <stop offset="100%" style="stop-color:#6a9955;stop-opacity:0.3" />
+                    </linearGradient>
+                `;
+                svg.appendChild(defs);
+
+                const container = document.createElementNS(ns, 'rect');
+                container.setAttribute('x', 80);
+                container.setAttribute('y', 60);
+                container.setAttribute('width', 840);
+                container.setAttribute('height', 480);
+                container.setAttribute('rx', 16);
+                container.setAttribute('fill', 'url(#containerGradient)');
+                container.setAttribute('stroke', '#6a9955');
+                container.setAttribute('stroke-width', '2');
+                container.id = 'ioc-container';
+                container.style.opacity = '0';
+                svg.appendChild(container);
+
+                const containerLabel = document.createElementNS(ns, 'text');
+                containerLabel.setAttribute('x', 500);
+                containerLabel.setAttribute('y', 95);
+                containerLabel.setAttribute('text-anchor', 'middle');
+                containerLabel.classList.add('svg-text', 'svg-text-title');
+                containerLabel.textContent = 'Spring IoC 容器';
+                containerLabel.style.fill = '#6a9955';
+                containerLabel.id = 'container-label';
+                containerLabel.style.opacity = '0';
+                svg.appendChild(containerLabel);
+
+                const beans = [
+                    { id: 'controller-bean', name: 'UserController', x: 200, y: 250 },
+                    { id: 'service-bean', name: 'UserService', x: 500, y: 250 },
+                    { id: 'dao-bean', name: 'UserDao', x: 800, y: 250 }
+                ];
+
+                beans.forEach(bean => {
+                    const g = document.createElementNS(ns, 'g');
+                    g.id = bean.id;
+                    g.style.opacity = '0';
+
+                    const rect = document.createElementNS(ns, 'rect');
+                    rect.setAttribute('x', bean.x - 80);
+                    rect.setAttribute('y', bean.y - 40);
+                    rect.setAttribute('width', 160);
+                    rect.setAttribute('height', 80);
+                    rect.setAttribute('rx', 8);
+                    rect.setAttribute('fill', 'var(--bg-secondary)');
+                    rect.setAttribute('stroke', 'var(--border-color)');
+                    rect.classList.add('bean-rect');
+
+                    const nameText = document.createElementNS(ns, 'text');
+                    nameText.setAttribute('x', bean.x);
+                    nameText.setAttribute('y', bean.y + 5);
+                    nameText.setAttribute('text-anchor', 'middle');
+                    nameText.classList.add('svg-text');
+                    nameText.textContent = bean.name;
+
+                    const typeText = document.createElementNS(ns, 'text');
+                    typeText.setAttribute('x', bean.x);
+                    typeText.setAttribute('y', bean.y + 25);
+                    typeText.setAttribute('text-anchor', 'middle');
+                    typeText.classList.add('svg-text', 'svg-text-code');
+                    typeText.textContent = '@Bean';
+
+                    g.appendChild(rect);
+                    g.appendChild(nameText);
+                    g.appendChild(typeText);
+                    svg.appendChild(g);
+                });
+
+                const dependencies = [
+                    { x1: 280, y1: 250, x2: 420, y2: 250, id: 'dep-cs' },
+                    { x1: 580, y1: 250, x2: 720, y2: 250, id: 'dep-sd' }
+                ];
+
+                dependencies.forEach(dep => {
+                    const line = document.createElementNS(ns, 'line');
+                    line.setAttribute('x1', dep.x1);
+                    line.setAttribute('y1', dep.y1);
+                    line.setAttribute('x2', dep.x2);
+                    line.setAttribute('y2', dep.y2);
+                    line.setAttribute('stroke', '#6a9955');
+                    line.setAttribute('stroke-width', '2');
+                    line.setAttribute('marker-end', 'url(#arrowhead2)');
+                    line.setAttribute('stroke-dasharray', '8,4');
+                    line.id = dep.id;
+                    line.style.opacity = '0';
+                    svg.appendChild(line);
+                });
+
+                const aopGroup = document.createElementNS(ns, 'g');
+                aopGroup.id = 'aop-proxy';
+                aopGroup.style.opacity = '0';
+
+                const aopRect = document.createElementNS(ns, 'rect');
+                aopRect.setAttribute('x', 250);
+                aopRect.setAttribute('y', 350);
+                aopRect.setAttribute('width', 500);
+                aopRect.setAttribute('height', 150);
+                aopRect.setAttribute('rx', 12);
+                aopRect.setAttribute('fill', 'rgba(197, 134, 192, 0.1)');
+                aopRect.setAttribute('stroke', '#c586c0');
+                aopRect.setAttribute('stroke-width', '2');
+                aopRect.setAttribute('stroke-dasharray', '5,5');
+
+                const aopLabel = document.createElementNS(ns, 'text');
+                aopLabel.setAttribute('x', 500);
+                aopLabel.setAttribute('y', 380);
+                aopLabel.setAttribute('text-anchor', 'middle');
+                aopLabel.classList.add('svg-text', 'svg-text-title');
+                aopLabel.textContent = 'AOP 动态代理';
+                aopLabel.style.fill = '#c586c0';
+
+                const aspects = [
+                    { name: '日志切面', x: 320, y: 430 },
+                    { name: '事务切面', x: 500, y: 430 },
+                    { name: '安全切面', x: 680, y: 430 }
+                ];
+
+                aspects.forEach(aspect => {
+                    const circle = document.createElementNS(ns, 'circle');
+                    circle.setAttribute('cx', aspect.x);
+                    circle.setAttribute('cy', aspect.y);
+                    circle.setAttribute('r', 28);
+                    circle.setAttribute('fill', 'var(--bg-secondary)');
+                    circle.setAttribute('stroke', '#c586c0');
+                    circle.classList.add('aspect-circle');
+
+                    const text = document.createElementNS(ns, 'text');
+                    text.setAttribute('x', aspect.x);
+                    text.setAttribute('y', aspect.y + 5);
+                    text.setAttribute('text-anchor', 'middle');
+                    text.classList.add('svg-text', 'svg-text-code');
+                    text.textContent = aspect.name;
+
+                    aopGroup.appendChild(circle);
+                    aopGroup.appendChild(text);
+                });
+
+                aopGroup.appendChild(aopRect);
+                aopGroup.appendChild(aopLabel);
+                svg.appendChild(aopGroup);
+
+                const callChain = document.createElementNS(ns, 'g');
+                callChain.id = 'call-chain';
+                callChain.style.opacity = '0';
+
+                const chainY = 160;
+                const chainSteps = [
+                    { x: 150, label: '请求' },
+                    { x: 320, label: '前置通知' },
+                    { x: 500, label: '目标方法' },
+                    { x: 680, label: '后置通知' },
+                    { x: 850, label: '返回' }
+                ];
+
+                chainSteps.forEach((step, i) => {
+                    const rect = document.createElementNS(ns, 'rect');
+                    rect.setAttribute('x', step.x - 60);
+                    rect.setAttribute('y', chainY);
+                    rect.setAttribute('width', 120);
+                    rect.setAttribute('height', 40);
+                    rect.setAttribute('rx', 6);
+                    rect.setAttribute('fill', 'var(--bg-tertiary)');
+                    rect.setAttribute('stroke', 'var(--border-color)');
+                    rect.classList.add('chain-step');
+                    rect.id = `chain-${i}`;
+
+                    const text = document.createElementNS(ns, 'text');
+                    text.setAttribute('x', step.x);
+                    text.setAttribute('y', chainY + 25);
+                    text.setAttribute('text-anchor', 'middle');
+                    text.classList.add('svg-text', 'svg-text-code');
+                    text.id = `chain-text-${i}`;
+                    text.textContent = step.label;
+
+                    callChain.appendChild(rect);
+                    callChain.appendChild(text);
+
+                    if (i < 4) {
+                        const arrow = document.createElementNS(ns, 'line');
+                        arrow.setAttribute('x1', step.x + 60);
+                        arrow.setAttribute('y1', chainY + 20);
+                        arrow.setAttribute('x2', chainSteps[i + 1].x - 60);
+                        arrow.setAttribute('y2', chainY + 20);
+                        arrow.setAttribute('stroke', 'var(--text-secondary)');
+                        arrow.setAttribute('stroke-width', '2');
+                        arrow.setAttribute('marker-end', 'url(#arrowhead2)');
+                        arrow.classList.add('chain-arrow');
+                        callChain.appendChild(arrow);
+                    }
+                });
+
+                svg.appendChild(callChain);
+
+                this.createSpringTimeline();
+            }
+
+            createSpringTimeline() {
+                const tl = gsap.timeline({ paused: true });
+
+                tl.to('#ioc-container', { opacity: 1, duration: 0.6 }, 0)
+                  .to('#container-label', { opacity: 1, duration: 0.4 }, 0.3)
+                  .to('#controller-bean, #service-bean, #dao-bean', { opacity: 1, scale: 1.1, duration: 0.3, stagger: 0.15, transformOrigin: 'center' }, 0.8)
+                  .to('#controller-bean, #service-bean, #dao-bean', { scale: 1, duration: 0.15 }, 1.4)
+                  .to('#dep-cs', { opacity: 1, duration: 0.4 }, 1.7)
+                  .to('#dep-sd', { opacity: 1, duration: 0.4 }, 1.9)
+                  .to('.bean-rect', { stroke: '#6a9955', strokeWidth: 2, duration: 0.2 }, 2.3)
+                  .to('#aop-proxy', { opacity: 1, duration: 0.5 }, 2.7)
+                  .from('.aspect-circle', { scale: 0, duration: 0.3, stagger: 0.1, transformOrigin: 'center' }, 3)
+                  .to('#call-chain', { opacity: 1, duration: 0.4 }, 3.6)
+                  .from('.chain-step', { scale: 0, duration: 0.25, stagger: 0.1, transformOrigin: 'center' }, 3.8)
+                  .to('.chain-step', { fill: '#6a9955', duration: 0.15, stagger: 0.15 }, 4.3);
+
+                this.timelines.spring = tl;
+            }
+
+            // ============ 模块3: 数据持久化 ============
+            initPersistence() {
+                const svg = document.getElementById('svg-persistence');
+                const ns = 'http://www.w3.org/2000/svg';
+                svg.innerHTML = '';
+
+                const defs = document.createElementNS(ns, 'defs');
+                defs.innerHTML = `
+                    <linearGradient id="objGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#569cd6;stop-opacity:0.2" />
+                        <stop offset="100%" style="stop-color:#569cd6;stop-opacity:0.1" />
+                    </linearGradient>
+                `;
+                svg.appendChild(defs);
+
+                const javaObj = document.createElementNS(ns, 'g');
+                javaObj.id = 'java-object';
+                javaObj.style.opacity = '0';
+
+                const objRect = document.createElementNS(ns, 'rect');
+                objRect.setAttribute('x', 100);
+                objRect.setAttribute('y', 180);
+                objRect.setAttribute('width', 200);
+                objRect.setAttribute('height', 240);
+                objRect.setAttribute('rx', 12);
+                objRect.setAttribute('fill', 'url(#objGradient)');
+                objRect.setAttribute('stroke', '#569cd6');
+                objRect.setAttribute('stroke-width', '2');
+
+                const objTitle = document.createElementNS(ns, 'text');
+                objTitle.setAttribute('x', 200);
+                objTitle.setAttribute('y', 220);
+                objTitle.setAttribute('text-anchor', 'middle');
+                objTitle.classList.add('svg-text', 'svg-text-title');
+                objTitle.textContent = 'Java对象';
+                objTitle.style.fill = '#569cd6';
+
+                const objFields = [
+                    { label: 'id:', value: '123L', y: 260 },
+                    { label: 'name:', value: '"张三"', y: 300 },
+                    { label: 'email:', value: '"zs@qq.com"', y: 340 },
+                    { label: 'age:', value: '25', y: 380 }
+                ];
+
+                objFields.forEach(field => {
+                    const labelText = document.createElementNS(ns, 'text');
+                    labelText.setAttribute('x', 120);
+                    labelText.setAttribute('y', field.y);
+                    labelText.classList.add('svg-text', 'svg-text-code');
+                    labelText.style.fill = '#569cd6';
+                    labelText.textContent = field.label;
+
+                    const valueText = document.createElementNS(ns, 'text');
+                    valueText.setAttribute('x', 280);
+                    valueText.setAttribute('y', field.y);
+                    valueText.setAttribute('text-anchor', 'end');
+                    valueText.classList.add('svg-text', 'svg-text-code');
+                    valueText.style.fill = '#ce9178';
+                    valueText.textContent = field.value;
+                    valueText.classList.add('obj-value');
+
+                    javaObj.appendChild(labelText);
+                    javaObj.appendChild(valueText);
+                });
+
+                javaObj.appendChild(objRect);
+                javaObj.appendChild(objTitle);
+                svg.appendChild(javaObj);
+
+                const dbTable = document.createElementNS(ns, 'g');
+                dbTable.id = 'db-table';
+                dbTable.style.opacity = '0';
+
+                const tableHeader = document.createElementNS(ns, 'rect');
+                tableHeader.setAttribute('x', 700);
+                tableHeader.setAttribute('y', 180);
+                tableHeader.setAttribute('width', 200);
+                tableHeader.setAttribute('height', 40);
+                tableHeader.setAttribute('fill', '#ce9178');
+                tableHeader.setAttribute('rx', '8');
+
+                const tableName = document.createElementNS(ns, 'text');
+                tableName.setAttribute('x', 800);
+                tableName.setAttribute('y', 207);
+                tableName.setAttribute('text-anchor', 'middle');
+                tableName.classList.add('svg-text');
+                tableName.style.fill = 'white';
+                tableName.style.fontWeight = 'bold';
+                tableName.textContent = 'users 表';
+
+                const tableBody = document.createElementNS(ns, 'rect');
+                tableBody.setAttribute('x', 700);
+                tableBody.setAttribute('y', 220);
+                tableBody.setAttribute('width', 200);
+                tableBody.setAttribute('height', 200);
+                tableBody.setAttribute('fill', 'rgba(206, 145, 120, 0.1)');
+                tableBody.setAttribute('stroke', '#ce9178');
+                tableBody.setAttribute('stroke-width', '2');
+
+                const dbFields = [
+                    { name: 'id', type: 'BIGINT', y: 260 },
+                    { name: 'username', type: 'VARCHAR', y: 300 },
+                    { name: 'email', type: 'VARCHAR', y: 340 },
+                    { name: 'age', type: 'INT', y: 380 }
+                ];
+
+                dbFields.forEach(field => {
+                    const nameText = document.createElementNS(ns, 'text');
+                    nameText.setAttribute('x', 720);
+                    nameText.setAttribute('y', field.y);
+                    nameText.classList.add('svg-text', 'svg-text-code');
+                    nameText.style.fill = '#ce9178';
+                    nameText.textContent = field.name;
+
+                    const typeText = document.createElementNS(ns, 'text');
+                    typeText.setAttribute('x', 880);
+                    typeText.setAttribute('y', field.y);
+                    typeText.setAttribute('text-anchor', 'end');
+                    typeText.classList.add('svg-text', 'svg-text-code');
+                    typeText.style.fill = '#569cd6';
+                    typeText.textContent = field.type;
+
+                    dbTable.appendChild(nameText);
+                    dbTable.appendChild(typeText);
+                });
+
+                dbTable.appendChild(tableHeader);
+                dbTable.appendChild(tableName);
+                dbTable.appendChild(tableBody);
+                svg.appendChild(dbTable);
+
+                const mappingLines = document.createElementNS(ns, 'g');
+                mappingLines.id = 'mapping-lines';
+                mappingLines.style.opacity = '0';
+
+                for (let i = 0; i < 4; i++) {
+                    const line = document.createElementNS(ns, 'line');
+                    line.setAttribute('x1', 300);
+                    line.setAttribute('y1', 260 + i * 40);
+                    line.setAttribute('x2', 700);
+                    line.setAttribute('y2', 260 + i * 40);
+                    line.setAttribute('stroke', '#4ec9b0');
+                    line.setAttribute('stroke-width', '2');
+                    line.setAttribute('stroke-dasharray', '10,5');
+                    line.classList.add('mapping-line');
+                    line.id = `map-line-${i}`;
+                    line.style.strokeDashoffset = '300';
+                    mappingLines.appendChild(line);
+
+                    const packet = document.createElementNS(ns, 'circle');
+                    packet.setAttribute('cx', 300);
+                    packet.setAttribute('cy', 260 + i * 40);
+                    packet.setAttribute('r', 8);
+                    packet.setAttribute('fill', '#4ec9b0');
+                    packet.classList.add('data-packet');
+                    packet.id = `packet-${i}`;
+                    packet.style.opacity = '0';
+                    svg.appendChild(packet);
+                }
+
+                svg.appendChild(mappingLines);
+
+                const sqlBox = document.createElementNS(ns, 'g');
+                sqlBox.id = 'sql-box';
+                sqlBox.style.opacity = '0';
+
+                const sqlRect = document.createElementNS(ns, 'rect');
+                sqlRect.setAttribute('x', 350);
+                sqlRect.setAttribute('y', 460);
+                sqlRect.setAttribute('width', 300);
+                sqlRect.setAttribute('height', 50);
+                sqlRect.setAttribute('rx', 8);
+                sqlRect.setAttribute('fill', 'var(--bg-secondary)');
+                sqlRect.setAttribute('stroke', '#ce9178');
+
+                const sqlText = document.createElementNS(ns, 'text');
+                sqlText.setAttribute('x', 500);
+                sqlText.setAttribute('y', 492);
+                sqlText.setAttribute('text-anchor', 'middle');
+                sqlText.classList.add('svg-text', 'svg-text-code');
+                sqlText.style.fill = '#ce9178';
+                sqlText.textContent = 'SELECT * FROM users WHERE id = 123';
+
+                sqlBox.appendChild(sqlRect);
+                sqlBox.appendChild(sqlText);
+                svg.appendChild(sqlBox);
+
+                const acidBox = document.createElementNS(ns, 'g');
+                acidBox.id = 'acid-box';
+                acidBox.style.opacity = '0';
+
+                const acidItems = ['A', 'C', 'I', 'D'];
+                const acidLabels = ['Atomicity', 'Consistency', 'Isolation', 'Durability'];
+                const acidColors = ['#f44747', '#4ec9b0', '#569cd6', '#ce9178'];
+
+                acidItems.forEach((item, i) => {
+                    const g = document.createElementNS(ns, 'g');
+                    g.classList.add('acid-item');
+                    g.id = `acid-${item}`;
+
+                    const circle = document.createElementNS(ns, 'circle');
+                    circle.setAttribute('cx', 150 + i * 180);
+                    circle.setAttribute('cy', 560);
+                    circle.setAttribute('r', 30);
+                    circle.setAttribute('fill', acidColors[i]);
+                    circle.setAttribute('opacity', '0.8');
+
+                    const text = document.createElementNS(ns, 'text');
+                    text.setAttribute('x', 150 + i * 180);
+                    text.setAttribute('y', 570);
+                    text.setAttribute('text-anchor', 'middle');
+                    text.classList.add('svg-text');
+                    text.style.fill = 'white';
+                    text.style.fontWeight = 'bold';
+                    text.style.fontSize = '20px';
+                    text.textContent = item;
+
+                    const label = document.createElementNS(ns, 'text');
+                    label.setAttribute('x', 150 + i * 180);
+                    label.setAttribute('y', 605);
+                    label.setAttribute('text-anchor', 'middle');
+                    label.classList.add('svg-text', 'svg-text-code');
+                    label.textContent = acidLabels[i];
+
+                    g.appendChild(circle);
+                    g.appendChild(text);
+                    g.appendChild(label);
+                    acidBox.appendChild(g);
+                });
+
+                svg.appendChild(acidBox);
+
+                this.createPersistenceTimeline();
+            }
+
+            createPersistenceTimeline() {
+                const tl = gsap.timeline({ paused: true });
+
+                tl.to('#java-object', { opacity: 1, duration: 0.5 }, 0)
+                  .to('#db-table', { opacity: 1, duration: 0.5 }, 0.3)
+                  .to('#mapping-lines', { opacity: 1, duration: 0.3 }, 0.9)
+                  .to('.mapping-line', { strokeDashoffset: 0, duration: 0.8, stagger: 0.15 }, 1)
+                  .to('#packet-0', { opacity: 1, duration: 0.2 }, 1.8)
+                  .to('#packet-0', { cx: 700, duration: 0.8, ease: 'power2.inOut' }, 2)
+                  .to('#packet-1', { opacity: 1, duration: 0.2 }, 2.1)
+                  .to('#packet-1', { cx: 700, duration: 0.8, ease: 'power2.inOut' }, 2.3)
+                  .to('#packet-2', { opacity: 1, duration: 0.2 }, 2.4)
+                  .to('#packet-2', { cx: 700, duration: 0.8, ease: 'power2.inOut' }, 2.6)
+                  .to('#packet-3', { opacity: 1, duration: 0.2 }, 2.7)
+                  .to('#packet-3', { cx: 700, duration: 0.8, ease: 'power2.inOut' }, 2.9)
+                  .to('#sql-box', { opacity: 1, duration: 0.4 }, 3.8)
+                  .to('#acid-box', { opacity: 1, duration: 0.4 }, 4.4)
+                  .from('.acid-item', { y: -30, opacity: 0, duration: 0.3, stagger: 0.1 }, 4.6)
+                  .to('.acid-item circle', { scale: 1.15, duration: 0.2, stagger: 0.1, transformOrigin: 'center' }, 5)
+                  .to('.acid-item circle', { scale: 1, duration: 0.15 }, 5.5);
+
+                this.timelines.persistence = tl;
+            }
+
+            // ============ 模块4: 微服务 ============
+            initMicroservice() {
+                const svg = document.getElementById('svg-microservice');
+                const ns = 'http://www.w3.org/2000/svg';
+                svg.innerHTML = '';
+
+                const gateway = document.createElementNS(ns, 'g');
+                gateway.id = 'api-gateway';
+                gateway.style.opacity = '0';
+
+                const gwRect = document.createElementNS(ns, 'rect');
+                gwRect.setAttribute('x', 50);
+                gwRect.setAttribute('y', 250);
+                gwRect.setAttribute('width', 120);
+                gwRect.setAttribute('height', 100);
+                gwRect.setAttribute('rx', 10);
+                gwRect.setAttribute('fill', 'rgba(244, 71, 71, 0.2)');
+                gwRect.setAttribute('stroke', '#f44747');
+                gwRect.setAttribute('stroke-width', '2');
+
+                const gwText = document.createElementNS(ns, 'text');
+                gwText.setAttribute('x', 110);
+                gwText.setAttribute('y', 295);
+                gwText.setAttribute('text-anchor', 'middle');
+                gwText.classList.add('svg-text');
+                gwText.textContent = 'API';
+
+                const gwText2 = document.createElementNS(ns, 'text');
+                gwText2.setAttribute('x', 110);
+                gwText2.setAttribute('y', 315);
+                gwText2.setAttribute('text-anchor', 'middle');
+                gwText2.classList.add('svg-text');
+                gwText2.textContent = 'Gateway';
+
+                gateway.appendChild(gwRect);
+                gateway.appendChild(gwText);
+                gateway.appendChild(gwText2);
+                svg.appendChild(gateway);
+
+                const threadPool = document.createElementNS(ns, 'g');
+                threadPool.id = 'thread-pool';
+                threadPool.style.opacity = '0';
+
+                const poolRect = document.createElementNS(ns, 'rect');
+                poolRect.setAttribute('x', 220);
+                poolRect.setAttribute('y', 200);
+                poolRect.setAttribute('width', 200);
+                poolRect.setAttribute('height', 200);
+                poolRect.setAttribute('rx', 12);
+                poolRect.setAttribute('fill', 'rgba(78, 201, 176, 0.1)');
+                poolRect.setAttribute('stroke', '#4ec9b0');
+                poolRect.setAttribute('stroke-width', '2');
+
+                const poolTitle = document.createElementNS(ns, 'text');
+                poolTitle.setAttribute('x', 320);
+                poolTitle.setAttribute('y', 230);
+                poolTitle.setAttribute('text-anchor', 'middle');
+                poolTitle.classList.add('svg-text', 'svg-text-title');
+                poolTitle.textContent = '线程池';
+                poolTitle.style.fill = '#4ec9b0';
+
+                threadPool.appendChild(poolRect);
+                threadPool.appendChild(poolTitle);
+
+                for (let i = 0; i < 6; i++) {
+                    const thread = document.createElementNS(ns, 'g');
+                    thread.id = `thread-${i}`;
+                    thread.classList.add('worker-thread');
+
+                    const x = 250 + (i % 3) * 70;
+                    const y = 280 + Math.floor(i / 3) * 50;
+
+                    const threadRect = document.createElementNS(ns, 'rect');
+                    threadRect.setAttribute('x', x);
+                    threadRect.setAttribute('y', y);
+                    threadRect.setAttribute('width', 50);
+                    threadRect.setAttribute('height', 35);
+                    threadRect.setAttribute('rx', 6);
+                    threadRect.setAttribute('fill', 'var(--bg-secondary)');
+                    threadRect.setAttribute('stroke', 'var(--border-color)');
+                    threadRect.classList.add('thread-rect');
+
+                    const threadText = document.createElementNS(ns, 'text');
+                    threadText.setAttribute('x', x + 25);
+                    threadText.setAttribute('y', y + 22);
+                    threadText.setAttribute('text-anchor', 'middle');
+                    threadText.classList.add('svg-text', 'svg-text-code');
+                    threadText.textContent = `T-${i + 1}`;
+
+                    const threadStatus = document.createElementNS(ns, 'circle');
+                    threadStatus.setAttribute('cx', x + 45);
+                    threadStatus.setAttribute('cy', y + 8);
+                    threadStatus.setAttribute('r', 4);
+                    threadStatus.setAttribute('fill', '#6a9955');
+                    threadStatus.classList.add('thread-status');
+
+                    thread.appendChild(threadRect);
+                    thread.appendChild(threadText);
+                    thread.appendChild(threadStatus);
+                    threadPool.appendChild(thread);
+                }
+
+                svg.appendChild(threadPool);
+
+                const services = [
+                    { id: 'user-service', name: '用户服务', x: 500, y: 120, color: '#569cd6' },
+                    { id: 'order-service', name: '订单服务', x: 500, y: 210, color: '#dcdcaa' },
+                    { id: 'product-service', name: '商品服务', x: 500, y: 300, color: '#4ec9b0' },
+                    { id: 'payment-service', name: '支付服务', x: 500, y: 390, color: '#ce9178' }
+                ];
+
+                const servicesGroup = document.createElementNS(ns, 'g');
+                servicesGroup.id = 'micro-services';
+                servicesGroup.style.opacity = '0';
+
+                services.forEach(svc => {
+                    const g = document.createElementNS(ns, 'g');
+                    g.id = svc.id;
+
+                    const rect = document.createElementNS(ns, 'rect');
+                    rect.setAttribute('x', svc.x);
+                    rect.setAttribute('y', svc.y);
+                    rect.setAttribute('width', 140);
+                    rect.setAttribute('height', 50);
+                    rect.setAttribute('rx', 8);
+                    rect.setAttribute('fill', 'var(--bg-secondary)');
+                    rect.setAttribute('stroke', svc.color);
+                    rect.setAttribute('stroke-width', '2');
+                    rect.classList.add('service-rect');
+
+                    const text = document.createElementNS(ns, 'text');
+                    text.setAttribute('x', svc.x + 70);
+                    text.setAttribute('y', svc.y + 30);
+                    text.setAttribute('text-anchor', 'middle');
+                    text.classList.add('svg-text');
+                    text.textContent = svc.name;
+
+                    g.appendChild(rect);
+                    g.appendChild(text);
+                    servicesGroup.appendChild(g);
+                });
+
+                svg.appendChild(servicesGroup);
+
+                const dbCluster = document.createElementNS(ns, 'g');
+                dbCluster.id = 'db-cluster';
+                dbCluster.style.opacity = '0';
+
+                for (let i = 0; i < 3; i++) {
+                    const db = document.createElementNS(ns, 'g');
+                    db.id = `db-${i}`;
+
+                    const x = 750 + i * 80;
+                    const y = 250;
+
+                    const dbTop = document.createElementNS(ns, 'ellipse');
+                    dbTop.setAttribute('cx', x);
+                    dbTop.setAttribute('cy', y);
+                    dbTop.setAttribute('rx', 30);
+                    dbTop.setAttribute('ry', 10);
+                    dbTop.setAttribute('fill', 'var(--bg-secondary)');
+                    dbTop.setAttribute('stroke', '#ce9178');
+
+                    const dbBody = document.createElementNS(ns, 'rect');
+                    dbBody.setAttribute('x', x - 30);
+                    dbBody.setAttribute('y', y);
+                    dbBody.setAttribute('width', 60);
+                    dbBody.setAttribute('height', 40);
+                    dbBody.setAttribute('fill', 'var(--bg-secondary)');
+                    dbBody.setAttribute('stroke', '#ce9178');
+
+                    const dbBottom = document.createElementNS(ns, 'ellipse');
+                    dbBottom.setAttribute('cx', x);
+                    dbBottom.setAttribute('cy', y + 40);
+                    dbBottom.setAttribute('rx', 30);
+                    dbBottom.setAttribute('ry', 10);
+                    dbBottom.setAttribute('fill', 'var(--bg-secondary)');
+                    dbBottom.setAttribute('stroke', '#ce9178');
+
+                    const dbLabel = document.createElementNS(ns, 'text');
+                    dbLabel.setAttribute('x', x);
+                    dbLabel.setAttribute('y', y + 60);
+                    dbLabel.setAttribute('text-anchor', 'middle');
+                    dbLabel.classList.add('svg-text', 'svg-text-code');
+                    dbLabel.textContent = `DB-${i + 1}`;
+
+                    db.appendChild(dbTop);
+                    db.appendChild(dbBody);
+                    db.appendChild(dbBottom);
+                    db.appendChild(dbLabel);
+                    dbCluster.appendChild(db);
+                }
+
+                svg.appendChild(dbCluster);
+
+                const requestFlow = document.createElementNS(ns, 'g');
+                requestFlow.id = 'request-flow';
+
+                for (let i = 0; i < 5; i++) {
+                    const packet = document.createElementNS(ns, 'circle');
+                    packet.setAttribute('cx', 50);
+                    packet.setAttribute('cy', 280 + i * 5);
+                    packet.setAttribute('r', 6);
+                    packet.setAttribute('fill', '#f44747');
+                    packet.classList.add('request-packet');
+                    packet.id = `req-packet-${i}`;
+                    packet.style.opacity = '0';
+                    requestFlow.appendChild(packet);
+                }
+
+                svg.appendChild(requestFlow);
+
+                this.createMicroserviceTimeline();
+            }
+
+            createMicroserviceTimeline() {
+                const tl = gsap.timeline({ paused: true });
+
+                tl.to('#api-gateway', { opacity: 1, duration: 0.5 }, 0)
+                  .to('.request-packet', { opacity: 1, duration: 0.15, stagger: 0.08 }, 0.5)
+                  .to('.request-packet', { cx: 170, duration: 0.6, stagger: 0.08, ease: 'power2.in' }, 0.7)
+                  .to('#thread-pool', { opacity: 1, duration: 0.4 }, 1.4)
+                  .from('.worker-thread', { scale: 0, duration: 0.25, stagger: 0.08, transformOrigin: 'center' }, 1.6)
+                  .to('.thread-status', { fill: '#f44747', duration: 0.2, stagger: 0.1 }, 1.9)
+                  .to('.thread-rect', { stroke: '#f44747', duration: 0.2, stagger: 0.1 }, 1.9)
+                  .to('#micro-services', { opacity: 1, duration: 0.4 }, 2.3)
+                  .from('.service-rect', { x: 450, opacity: 0, duration: 0.35, stagger: 0.12 }, 2.5)
+                  .to('#db-cluster', { opacity: 1, duration: 0.4 }, 3.2)
+                  .from('#db-cluster > g', { y: 20, opacity: 0, duration: 0.25, stagger: 0.1 }, 3.4)
+                  .to('.thread-status', { fill: '#4ec9b0', duration: 0.2, stagger: 0.1 }, 3.9)
+                  .to('.thread-rect', { stroke: 'var(--border-color)', duration: 0.2 }, 3.9)
+                  .to('.request-packet', { fill: '#4ec9b0', duration: 0.2 }, 4.2)
+                  .to('.request-packet', { cx: 50, duration: 0.8, stagger: 0.08, ease: 'power2.out' }, 4.4);
+
+                this.timelines.microservice = tl;
+            }
+        }
+
+        // ============ 初始化应用 ============
+        document.addEventListener('DOMContentLoaded', () => {
+            new AnimationController();
+        });
+    </script>
+</body>
+</html>

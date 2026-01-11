@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>项目展示 - 郝彬珺的技术空间</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: #f8f9fa;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        nav {
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+        }
+        .logo {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #3eaf7c;
+            text-decoration: none;
+        }
+        .nav-links a {
+            margin-left: 20px;
+            text-decoration: none;
+            color: #2c3e50;
+        }
+        .nav-links a:hover { color: #3eaf7c; }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .content {
+            padding: 40px 20px;
+        }
+        .project-section {
+            margin-bottom: 50px;
+        }
+        .project-section h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #3eaf7c;
+            padding-bottom: 10px;
+        }
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        .project-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+        .project-card h3 {
+            color: #3eaf7c;
+            margin-bottom: 10px;
+        }
+        .project-card .tech {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        .project-card p {
+            color: #555;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+        }
+        .project-card a {
+            display: inline-block;
+            padding: 8px 20px;
+            background: #3eaf7c;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .project-card a:hover {
+            background: #2c8a6e;
+        }
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="/" class="logo">郝彬珺的技术空间</a>
+            <div class="nav-links">
+                <a href="/">首页</a>
+                <a href="/blog/">技术博客</a>
+                <a href="/projects/">项目展示</a>
+                <a href="/about.html">关于我</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="header">
+        <div class="container">
+            <h1>项目展示</h1>
+            <p>我开发或参与的一些项目</p>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="container">
+            <div class="project-section">
+                <h2>🤖 AI 工具类</h2>
+                <div class="project-grid">
+                    <div class="project-card">
+                        <h3>masyun-toolkit</h3>
+                        <p class="tech">技术栈: Capacitor, 跨平台应用</p>
+                        <p>AI 编程项目分享工具，用于学习和使用。支持 Web 和 Android 平台，具有 AI 辅助编程功能。</p>
+                        <a href="https://gitee.com/haobinjun/masyun-toolkit" target="_blank">查看项目 →</a>
+                    </div>
+                    <div class="project-card">
+                        <h3>fengshui-ai</h3>
+                        <p class="tech">技术栈: Python, Web</p>
+                        <p>风水 AI 分析系统。结合传统风水知识与现代 AI 技术，提供智能化分析。</p>
+                        <a href="https://gitee.com/haobinjun" target="_blank">查看项目 →</a>
+                    </div>
+                    <div class="project-card">
+                        <h3>shanxi-tourism-agent</h3>
+                        <p class="tech">技术栈: React, FastAPI</p>
+                        <p>山西旅游智能 Agent，提供 AI 智能推荐和旅游规划服务，前后端分离架构。</p>
+                        <a href="https://gitee.com/haobinjun" target="_blank">查看项目 →</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-section">
+                <h2>🛠️ 实用工具</h2>
+                <div class="project-grid">
+                    <div class="project-card">
+                        <h3>todo-management-platform</h3>
+                        <p class="tech">技术栈: React, Android</p>
+                        <p>跨平台待办管理应用，支持本地数据持久化，界面简洁易用。</p>
+                        <a href="https://gitee.com/haobinjun" target="_blank">查看项目 →</a>
+                    </div>
+                    <div class="project-card">
+                        <h3>dream-nexus</h3>
+                        <p class="tech">技术栈: Web 前端</p>
+                        <p>梦境分析网页项目，创意的概念设计与可视化分析。</p>
+                        <a href="https://gitee.com/haobinjun" target="_blank">查看项目 →</a>
+                    </div>
+                    <div class="project-card">
+                        <h3>login-system</h3>
+                        <p class="tech">技术栈: Web 后端</p>
+                        <p>登录系统模块，提供完整的用户认证功能。</p>
+                        <a href="https://gitee.com/haobinjun" target="_blank">查看项目 →</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-section">
+                <h2>🎮 游戏/娱乐</h2>
+                <div class="project-grid">
+                    <div class="project-card">
+                        <h3>meme-match-game</h3>
+                        <p class="tech">技术栈: Game Framework</p>
+                        <p>表情包匹配游戏，有趣的休闲小游戏。</p>
+                        <a href="https://gitee.com/haobinjun" target="_blank">查看项目 →</a>
+                    </div>
+                    <div class="project-card">
+                        <h3>simple-account</h3>
+                        <p class="tech">技术栈: Web</p>
+                        <p>简易账户系统，提供基础的账户管理功能。</p>
+                        <a href="https://gitee.com/haobinjun" target="_blank">查看项目 →</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-section">
+                <h2>🏆 比赛项目</h2>
+                <div class="project-grid">
+                    <div class="project-card">
+                        <h3>三创AI电商实战赛</h3>
+                        <p>AI 电商解决方案，结合人工智能技术优化电商体验。</p>
+                    </div>
+                    <div class="project-card">
+                        <h3>梧桐杯创新大赛</h3>
+                        <p>创新项目作品，展示创新思维和技术实力。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>用技术创造价值，用分享传递知识</p>
+        <p style="margin-top: 10px;">Copyright © 2025-present 郝彬珺</p>
+    </div>
+</body>
+</html>
