@@ -1,10 +1,10 @@
 source "https://rubygems.org"
 
-# Jekyll 核心依赖
-gem "jekyll", "~> 4.3"
+# Jekyll 核心依赖 - 使用稳定版本
+gem "jekyll", "~> 3.9"
 
 # Jekyll 插件
-gem "jekyll-feed", "~> 0.12"
+gem "jekyll-feed", "~> 0.15"
 gem "jekyll-seo-tag", "~> 2.8"
 gem "jekyll-sitemap", "~> 1.4"
 
