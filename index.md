@@ -145,7 +145,7 @@ title: 首页
 <div class="latest-posts">
   <h2>最新文章</h2>
   <ul class="post-list">
-    {% for post in site.posts limit 5 %}
+    {% for post in site.posts limit:5 %}
     <li class="post-item">
       <a href="{{ post.url }}">
         <h3>{{ post.title }}</h3>
