@@ -1,6 +1,6 @@
 {
   "env": {
-    "ANTHROPIC_AUTH_TOKEN": "07f97e85558347f79d277e3577e7e93f.wEqoN5ss5jTpFLzK",
+    "ANTHROPIC_AUTH_TOKEN": "替换为你的key",
     "ANTHROPIC_BASE_URL": "https://open.bigmodel.cn/api/anthropic",
     "ANTHROPIC_DEFAULT_OPUS_MODEL": "GLM-4.6",
     "ANTHROPIC_DEFAULT_SONNET_MODEL": "GLM-4.6",
